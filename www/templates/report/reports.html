@@ -1,0 +1,29 @@
+<ion-view view-title="报表内容">
+
+    <!--
+    <ion-nav-buttons side="left">
+        <div class="button button-clear" ng-click="goback()">
+            返回
+        </div>
+    </ion-nav-buttons> -->
+    <ion-content>
+        <ion-refresher
+                pulling-text="下拉加载下一页"
+                on-refresh="doRefresh()">
+        </ion-refresher>
+        <div class="list" ng-click="closeCommentDialog()">
+            <div class="card" ng-repeat="report in reports">
+                <div class="item item-body">
+                    <ion-list>
+                        <div class="item item-input" ng-repeat="(key, value) in report">
+                            <div class="col" style="text-align: center; font-size: 0.625em">{{key}} : </div>
+                            <div class="col" style="text-align: center; font-size: 0.75em">{{value}}</div>
+
+                        </div>
+                    </ion-list>
+                </div>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>

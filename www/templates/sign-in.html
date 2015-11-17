@@ -1,0 +1,22 @@
+<ion-view view-title="用户登录">
+    <ion-content>
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">用户名</span>
+                <input type="text" ng-model="user.username" placeholder="此处输入您的用户名">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">密码</span>
+                <input type="password" ng-model="user.password" placeholder="此处输入您的密码">
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="signIn(user)">
+                登录
+            </button>
+            <p class="text-center">
+                <a href="#/forgot-password">登录遇到问题</a>
+            </p>
+        </div>
+    </ion-content>
+</ion-view>

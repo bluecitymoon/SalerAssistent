@@ -1,0 +1,36 @@
+<ion-view view-title="客户">
+    <ion-nav-buttons side="left">
+        <a class="button" href="#/tab/customer/mgr/new">已约</a>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a class="button" href="#/tab/customer/mgr/new">当日</a>
+    </ion-nav-buttons>
+    <ion-content>
+
+        <div class="item item-input-inset">
+            <label class="item-input-wrapper">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="姓名或公司名" name="inputValue" ng-model="inputValue">
+            </label>
+            <a class="button button-small" ng-click="searchCustomers(inputValue)">搜索</a>
+        </div>
+        <ion-list>
+            <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="customer in customers"
+                      type="item-text-wrap" href="#/customer/{{customer.id}}">
+                <img ng-src="img/lufee.jpeg">
+
+                <h2>{{customer.name}}</h2>
+
+                <p>{{customer.company}} {{customer.phone}}</p>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+                <ion-option-button class="button-calm" ng-click="dateCustomer(customer)">
+                    预约
+                </ion-option-button>
+                <ion-option-button class="button-balanced" ng-click="callHim(customer)">
+                    呼叫
+                </ion-option-button>
+
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
