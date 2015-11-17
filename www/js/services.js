@@ -121,12 +121,12 @@ angular.module('starter.services', [])
             });
         }
 
-        function loadFinalOptionResultWithCategory(conditionId, optionId) {
+        function loadFinalOptionResultWithCategory(conditionId, optionId, keyword, pageNumber) {
             UtilService.showLoadingScreen();
-            //search-option-detail-load-event
+
             $http({
                 url: ServerRoot + 'canzhaoshuju/getshujulbfy',
-                data: {username: loginUser.username, token: loginUser.token, id: conditionId, leibieid: optionId},
+                data: {username: loginUser.username, token: loginUser.token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -233,6 +233,15 @@ angular.module('starter.services', [])
             return lastSearchCondition;
         }
 
+        var lastSelectedCondition = {};
+        function getCurrentSelectedCondition() {
+            return lastSelectedCondition;
+        }
+
+        function setCurrentSelectedCondition(condition) {
+            lastSelectedCondition = condition;
+        }
+
         return {
             getTypes: getTypes,
             loadReportSearchConditions: loadReportSearchConditions,
@@ -241,7 +250,9 @@ angular.module('starter.services', [])
             searchOptionsWithKeyword: searchOptionsWithKeyword,
             queryReport: queryReport,
             setLastSearchCondition: setLastSearchCondition,
-            getLastSearchCondition: getLastSearchCondition
+            getLastSearchCondition: getLastSearchCondition,
+            setCurrentSelectedCondition: setCurrentSelectedCondition,
+            getCurrentSelectedCondition: getCurrentSelectedCondition
         }
     })
 

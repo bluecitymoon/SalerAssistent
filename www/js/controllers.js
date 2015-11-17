@@ -102,6 +102,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.options = [];
         $scope.allOptions = [];
         //$scope.detailOptions = [];
+        $scope.menuOptions = [];
 
         $rootScope.$on('search-report-conditions-load-event', function (event, data) {
 
@@ -110,14 +111,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             }
             UtilService.closeLoadingScreen();
         });
-
-        //$rootScope.$on('search-option-detail-load-event', function (event, data) {
-        //
-        //    if (data.detailOptions) {
-        //        $scope.detailOptions = data.detailOptions;
-        //    }
-        //    UtilService.closeLoadingScreen();
-        //});
 
         $scope.currentOptionsType = '';
         $scope.currentSelectCondition = {};
@@ -129,6 +122,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                     if (key == 'leibie') {
                         $scope.allOptions = value;
 
+
                         var firstLevelOptions = [];
                         angular.forEach(value, function(o, k) {
 
@@ -137,7 +131,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                             }
                         });
 
-                        $scope.options = firstLevelOptions;
+                        $scope.menuOptions = firstLevelOptions;
 
                     } else {
                         $scope.options = value;
@@ -147,6 +141,10 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
                     console.debug(key);
                     console.debug(value);
+
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
+
                 });
             }
 
@@ -167,14 +165,46 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         };
 
-        $scope.searchOptionsWithKeyword = function() {
+        $scope.currentPageIndex = 1;
+        $scope.searchOptionsWithKeyword = function(wantNextPage) {
+
+            if (wantNextPage) $scope.currentPageIndex ++;
 
             if ($scope.currentOptionsType == 'leibie') {
-                ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id);
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, $scope.currentSelec.id,  $scope.keywordCondition.name);
             } else {
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
+                //ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
+
+                ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
             }
 
+        };
+
+        $rootScope.$on('search-option-detail-load-event', function(event, data) {
+
+            var detailOptionsList = data.detailOptions;
+            if(detailOptionsList) {
+
+                $scope.menuOptions = detailOptionsList;
+            }
+
+            UtilService.closeLoadingScreen();
+
+        });
+
+        $scope.showSecondLevelOptionsAndLoadOptions = function(option) {
+
+            var secondLevelOptions = [];
+
+            if (option.bianma) {
+                secondLevelOptions = getSecondLevelOptions(option.bianma);
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, option.mingcheng, 1 );
+            }
+
+            if (secondLevelOptions.length > 0) {
+
+                $scope.menuOptions = secondLevelOptions;
+            }
         };
 
         $scope.showSecondLevelOptionsOrCloseDialog = function(option) {
@@ -186,14 +216,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                 if (option.bianma) {
                     secondLevelOptions = getSecondLevelOptions(option.bianma);
                 } else {
-                    return;
+                    ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, option.mingcheng, 1 );
                 }
 
                 if (secondLevelOptions.length > 0) {
 
                     $scope.options = secondLevelOptions;
                 } else {
-                    ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id);
+                    ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, null, $scope.currentPageIndex);
                 }
 
             } else {
@@ -223,17 +253,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             });
 
             return secondLevelOptions;
-        };
-
-        $scope.doRefresh = function() {
-            $http.get('/new-items')
-                .success(function(newItems) {
-                    $scope.items = newItems;
-                })
-                .finally(function() {
-                    // Stop the ion-refresher from spinning
-                    $scope.$broadcast('scroll.refreshComplete');
-                });
         };
 
         $scope.queryReport = function() {
@@ -323,6 +342,9 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         $scope.closeAutoCompleteDialog = function () {
             $scope.modal.hide();
+
+            $scope.currentPageIndex = 1;
+            $scope.options = [];
         };
 
         //Cleanup the modal when we're done with it!
@@ -332,7 +354,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         // Execute action on hide modal
         $scope.$on('modal.hidden', function () {
-            // Execute action
+            $scope.currentPageIndex = 1;
+            $scope.options = [];
         });
 
         // Execute action on remove modal

@@ -7,7 +7,7 @@
     <ion-content>
         <ion-refresher
                 pulling-text="下拉加载下一页"
-                on-refresh="doRefresh()">
+                on-refresh="searchOptionsWithKeyword(true)">
         </ion-refresher>
         <div class="item item-input-inset">
             <label class="item-input-wrapper">
@@ -22,18 +22,18 @@
         <div class="row">
             <div class="col" ng-show="currentOptionsType == 'leibie'">
                 <ion-list>
-                    <ion-item class="item-remove-animate item-icon-right" ng-repeat="option in options" style="padding-left : 10px !important;  min-height: 50px !important;"
-                              type="item-text-wrap" ng-click="showSecondLevelOptionsOrCloseDialog(option)">
-                        {{option.mingcheng}}
+                    <ion-item class="item-remove-animate item-icon-right" ng-repeat="menu in menuOptions" style="padding-left : 10px !important;  min-height: 50px !important;"
+                              type="item-text-wrap" ng-click="showSecondLevelOptionsAndLoadOptions(menu)">
+                        {{menu.mingcheng}}
                         <i class="icon ion-chevron-right icon-accessory"></i>
-
+<!--
                         <ion-option-button class="button-calm" ng-click="searchFinalOptions(option)">
                             查看
-                        </ion-option-button>
+                        </ion-option-button> -->
                     </ion-item>
                 </ion-list>
             </div>
-            <div class="col">
+            <div class="col" ng-show="options.length > 0">
                 <ion-list>
                     <ion-item class="item-remove-animate item-icon-right" ng-repeat="option in options" type="item-text-wrap" ng-click="showSecondLevelOptionsOrCloseDialog(option)">
                         {{option.mingcheng}}
