@@ -185,7 +185,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             var detailOptionsList = data.detailOptions;
             if(detailOptionsList) {
 
-                $scope.menuOptions = detailOptionsList;
+                $scope.options = detailOptionsList;
             }
 
             UtilService.closeLoadingScreen();
@@ -198,7 +198,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             if (option.bianma) {
                 secondLevelOptions = getSecondLevelOptions(option.bianma);
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, option.mingcheng, 1 );
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, '', 1 );
             }
 
             if (secondLevelOptions.length > 0) {
@@ -209,28 +209,28 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         $scope.showSecondLevelOptionsOrCloseDialog = function(option) {
 
-            if ($scope.currentOptionsType == 'leibie') {
-
-                var secondLevelOptions = [];
-
-                if (option.bianma) {
-                    secondLevelOptions = getSecondLevelOptions(option.bianma);
-                } else {
-                    ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, option.mingcheng, 1 );
-                }
-
-                if (secondLevelOptions.length > 0) {
-
-                    $scope.options = secondLevelOptions;
-                } else {
-                    ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, null, $scope.currentPageIndex);
-                }
-
-            } else {
+            //if ($scope.currentOptionsType == 'leibie') {
+            //
+            //    var secondLevelOptions = [];
+            //
+            //    if (option.bianma) {
+            //        secondLevelOptions = getSecondLevelOptions(option.bianma);
+            //    } else {
+            //        ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, option.mingcheng, 1 );
+            //    }
+            //
+            //    if (secondLevelOptions.length > 0) {
+            //
+            //        $scope.options = secondLevelOptions;
+            //    } else {
+            //        ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, null, $scope.currentPageIndex);
+            //    }
+            //
+            //} else {
 
                 $scope.currentSelectCondition.moren1 = option.mingcheng;
                 $scope.modal.hide();
-            }
+           // }
 
         };
 
