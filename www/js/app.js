@@ -11,13 +11,12 @@ var mode = 'DEBUG';
 var weekDaysList = ["六", "日", "一", "二", "三", "四", "五"];
 var monthList = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ion-tree-list'])
 
     .constant('basicURL', 'http://localhost:8080/crud/rest/')
     .constant('mapkey', 'f42572d0237047d15f2a6306b7e763b7')
 
     .constant('ServerRoot', 'http://www.hanthink.cc:808/hanthinkapi/')
-    
 
     .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 

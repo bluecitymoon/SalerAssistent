@@ -16,9 +16,11 @@
             </label>
             <a ng-disabled=" !keywordCondition.name || keywordCondition.name === ''" class="button button-small" ng-click="searchOptionsWithKeyword()">搜索</a>
         </div>
-        <div class="row">
 
+        <div class="row">
+            <ion-tree-list items="demo" collapsed="collapse" template-url="{{customTemplate}}"></ion-tree-list>
         </div>
+
         <div class="row">
             <div class="col" ng-show="currentOptionsType == 'leibie'">
                 <ion-list>

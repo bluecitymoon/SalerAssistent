@@ -105,6 +105,86 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         //$scope.detailOptions = [];
         $scope.menuOptions = [];
 
+        $scope.optionTreeObject = [];
+
+        $scope.collapse = true;
+        $scope.tasks = [
+            {
+                name: 'Chapter one',
+                checked: false,
+                tree: [
+                    {
+                        name: 'Section 1',
+                        checked: false,
+                        tree: [
+                            {
+                                name: 'Subsection 1.1'
+                            },
+                            {
+                                name: 'Subsection 1.2'
+                            },
+                            {
+                                name: 'Subsection 1.3'
+                            }
+                        ]
+                    },
+                    {
+                        name: 'Section 2',
+                        checked: true
+                    },
+                    {
+                        name: 'Section 3',
+                        checked: true
+                    }
+                ]
+            }
+        ];
+
+        $scope.demo = [{"id": "25", "bianma": "1001", "mingcheng": "供应商", "name": "供应商", "tree": []},
+            {
+            "id": "26",
+            "bianma": "1002",
+            "mingcheng": "客户",
+            "name": "客户",
+            "tree": [{"id": "28", "bianma": "100201", "mingcheng": "卖场", "name": "卖场"}, {
+                "id": "29",
+                "bianma": "100202",
+                "mingcheng": "超市",
+                "name": "超市"
+            }, {"id": "30", "bianma": "100203", "mingcheng": "便利店", "name": "便利店"}, {
+                "id": "32",
+                "bianma": "100204",
+                "mingcheng": "经销",
+                "name": "经销"
+            }, {"id": "35", "bianma": "100205", "mingcheng": "批发商", "name": "批发商"}]
+        }, {
+            "id": "27",
+            "bianma": "1003",
+            "mingcheng": "协作单位",
+            "name": "协作单位",
+            "tree": [{"id": "40", "bianma": "100301", "mingcheng": "物流", "name": "物流"}, {
+                "id": "42",
+                "bianma": "100302",
+                "mingcheng": "报关",
+                "name": "报关"
+            }]
+        }];
+
+        $scope.toggleCollapse = function(item){
+            $scope.collapse = !$scope.collapse;
+            console.log($scope.collapse)
+        };
+
+        $scope.customTemplate = 'item_default_renderer';
+
+        $scope.toggleTemplate = function() {
+            if ($scope.customTemplate == 'ion-item.tmpl.html') {
+                $scope.customTemplate = 'item_default_renderer'
+            } else {
+                $scope.customTemplate = 'ion-item.tmpl.html'
+            }
+        };
+
         $rootScope.$on('search-report-conditions-load-event', function (event, data) {
 
             if (data.conditions) {
@@ -129,9 +209,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
                             if (o.bianma && o.bianma.length == 4) {
                                 firstLevelOptions.push(o);
+
+                                o.name = o.mingcheng;
+                                o.checked = true;
+                                $scope.optionTreeObject.push(o);
                             }
                         });
 
+                        buildTreeObjectForMenu();
                         $scope.menuOptions = firstLevelOptions;
 
                     } else {
@@ -151,6 +236,63 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             UtilService.closeLoadingScreen();
         });
+
+        function buildTreeObjectForMenu() {
+
+            angular.forEach($scope.optionTreeObject, function(value, index) {
+                console.debug('checking .. ' + JSON.stringify(value));
+
+                var nextLevelOptionArray = findNextLevelOptions(value);
+
+                console.debug('found' + JSON.stringify(nextLevelOptionArray));
+
+                if (nextLevelOptionArray.length > 0 ) {
+                    value.tree = nextLevelOptionArray;
+                }
+
+            });
+
+            console.debug('found' + JSON.stringify($scope.optionTreeObject));
+        };
+
+        function findNextLevelOptions(inputOption) {
+
+            var secondLevelOptions = [];
+            var firstLevelOptionLength = inputOption.bianma.length;
+            angular.forEach($scope.allOptions, function(option, i) {
+
+                if (option.bianma) {
+
+                    var secondLevelOptionLength = option.bianma.length;
+                    var gap = secondLevelOptionLength - firstLevelOptionLength;
+
+                    if(gap == 2 && option.bianma.indexOf(inputOption.bianma) > -1 ) {
+
+                        option.name = option.mingcheng;
+                        option.checked = true;
+
+                        secondLevelOptions.push(option);
+                    }
+                }
+            });
+
+            return secondLevelOptions;
+        };
+
+        $scope.showSecondLevelOptionsAndLoadOptions = function(option) {
+
+            var secondLevelOptions = [];
+
+            if (option.bianma) {
+                secondLevelOptions = getSecondLevelOptions(option.bianma);
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, '', 1 );
+            }
+
+            if (secondLevelOptions.length > 0) {
+
+                $scope.menuOptions = secondLevelOptions;
+            }
+        };
 
         $scope.keywordCondition = {name : ''};
         $scope.searchFinalOptions = function(option) {
@@ -193,45 +335,10 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         });
 
-        $scope.showSecondLevelOptionsAndLoadOptions = function(option) {
-
-            var secondLevelOptions = [];
-
-            if (option.bianma) {
-                secondLevelOptions = getSecondLevelOptions(option.bianma);
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, '', 1 );
-            }
-
-            if (secondLevelOptions.length > 0) {
-
-                $scope.menuOptions = secondLevelOptions;
-            }
-        };
-
         $scope.showSecondLevelOptionsOrCloseDialog = function(option) {
 
-            //if ($scope.currentOptionsType == 'leibie') {
-            //
-            //    var secondLevelOptions = [];
-            //
-            //    if (option.bianma) {
-            //        secondLevelOptions = getSecondLevelOptions(option.bianma);
-            //    } else {
-            //        ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, option.mingcheng, 1 );
-            //    }
-            //
-            //    if (secondLevelOptions.length > 0) {
-            //
-            //        $scope.options = secondLevelOptions;
-            //    } else {
-            //        ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, null, $scope.currentPageIndex);
-            //    }
-            //
-            //} else {
-
-                $scope.currentSelectCondition.moren1 = option.mingcheng;
-                $scope.modal.hide();
-           // }
+            $scope.currentSelectCondition.moren1 = option.mingcheng;
+            $scope.modal.hide();
 
         };
 
@@ -248,6 +355,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
                     if(gap == 2 && option.bianma.indexOf(firstLevelOption) > -1 ) {
                         //{text : option.mingcheng}
+                        option.name = option.mingcheng;
+
                         secondLevelOptions.push(option);
                     }
                 }
