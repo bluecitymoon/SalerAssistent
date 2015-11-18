@@ -71,9 +71,10 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
     .controller('ReportResultCtrl', function ($rootScope, $scope, $state, UtilService, ReportService) {
 
+        $scope.currentPageNumber = 1;
         $scope.$on('$ionicView.enter', function (e) {
 
-            ReportService.queryReport(ReportService.getLastSearchCondition());
+            ReportService.queryReport(ReportService.getLastSearchCondition(), $scope.currentPageNumber);
         });
 
         $scope.reports = [];

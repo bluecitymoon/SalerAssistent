@@ -179,7 +179,7 @@ angular.module('starter.services', [])
             });
         };
 
-        function queryReport(conditions) {
+        function queryReport(conditions, pageNumber) {
             UtilService.showLoadingScreen();
             var conditionData = [];
 
@@ -192,11 +192,8 @@ angular.module('starter.services', [])
             });
 
             var conditionDataJSONstring = JSON.stringify(conditionData).replace(/"/g, '\'');
-            var queryData = {username: loginUser.username, token: loginUser.token, tiaojian: conditionDataJSONstring};
+            var queryData = {username: loginUser.username, token: loginUser.token, yeshu: pageNumber, tiaojian: conditionDataJSONstring};
 
-            if (mode == 'DEBUG') {
-                queryData = {"username":"admin","token":"0DPiKuNIrrVmD8IUCuw1hQxNqZc=","tiaojian":"[{'id':1196,'moren1':'2013-10-31T16:00:00.000Z','moren2':'2015-11-14T16:00:00.000Z'}]"};
-            }
             $http({
                 url: ServerRoot + 'report/getreportdata',
                 data: queryData,
