@@ -18,22 +18,8 @@
         </div>
 
         <div class="row">
-            <ion-tree-list items="demo" collapsed="collapse" template-url="{{customTemplate}}"></ion-tree-list>
-        </div>
-
-        <div class="row">
             <div class="col" ng-show="currentOptionsType == 'leibie'">
-                <ion-list>
-                    <ion-item class="item-remove-animate item-icon-right" ng-repeat="menu in menuOptions" style="padding-left : 10px !important;  min-height: 50px !important;"
-                              type="item-text-wrap" ng-click="showSecondLevelOptionsAndLoadOptions(menu)">
-                        {{menu.mingcheng}}
-                        <i class="icon ion-chevron-right icon-accessory"></i>
-<!--
-                        <ion-option-button class="button-calm" ng-click="searchFinalOptions(option)">
-                            查看
-                        </ion-option-button> -->
-                    </ion-item>
-                </ion-list>
+                <ion-tree-list items="optionTreeObject" collapsed="collapse" template-url="{{customTemplate}}"></ion-tree-list>
             </div>
             <div class="col">
                 <ion-list>

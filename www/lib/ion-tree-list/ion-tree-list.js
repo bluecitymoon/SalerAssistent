@@ -23,6 +23,8 @@ function toggleCollapse(obj) {
             toggleCollapse(obj[key])
         }
     }
+
+    console.debug(JSON.stringify(obj));
     return obj
 }
 

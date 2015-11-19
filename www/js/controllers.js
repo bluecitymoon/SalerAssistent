@@ -48,10 +48,25 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         };
     })
 
-    .controller('DataCtrl', function () {
+    .controller('DataCtrl', function ($scope, DataService, $rootScope, UtilService, $window) {
+        $scope.$on('$ionicView.enter', function (e) {
+            DataService.getTypes();
+        });
 
+        $scope.types = [];
+
+        $rootScope.$on('data-type-load-event', function (event, data) {
+
+            if (data.types) {
+                $scope.types = data.types;
+
+            }
+            UtilService.closeLoadingScreen();
+        });
+
+        $scope.itemHeight = $window.innerWidth / 3;
     })
-    .controller('ReportTypesCtrl', function ($scope, ReportService, $rootScope, UtilService) {
+    .controller('ReportTypesCtrl', function ($scope, ReportService, $rootScope, UtilService, $window) {
 
         $scope.$on('$ionicView.enter', function (e) {
             ReportService.getTypes();
@@ -67,6 +82,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             }
             UtilService.closeLoadingScreen();
         });
+
+        $scope.itemHeight = $window.innerWidth / 3;
     })
 
     .controller('ReportResultCtrl', function ($rootScope, $scope, $state, UtilService, ReportService) {
@@ -108,71 +125,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.optionTreeObject = [];
 
         $scope.collapse = true;
-        $scope.tasks = [
-            {
-                name: 'Chapter one',
-                checked: false,
-                tree: [
-                    {
-                        name: 'Section 1',
-                        checked: false,
-                        tree: [
-                            {
-                                name: 'Subsection 1.1'
-                            },
-                            {
-                                name: 'Subsection 1.2'
-                            },
-                            {
-                                name: 'Subsection 1.3'
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Section 2',
-                        checked: true
-                    },
-                    {
-                        name: 'Section 3',
-                        checked: true
-                    }
-                ]
-            }
-        ];
-
-        $scope.demo = [{"id": "25", "bianma": "1001", "mingcheng": "供应商", "name": "供应商", "tree": []},
-            {
-            "id": "26",
-            "bianma": "1002",
-            "mingcheng": "客户",
-            "name": "客户",
-            "tree": [{"id": "28", "bianma": "100201", "mingcheng": "卖场", "name": "卖场"}, {
-                "id": "29",
-                "bianma": "100202",
-                "mingcheng": "超市",
-                "name": "超市"
-            }, {"id": "30", "bianma": "100203", "mingcheng": "便利店", "name": "便利店"}, {
-                "id": "32",
-                "bianma": "100204",
-                "mingcheng": "经销",
-                "name": "经销"
-            }, {"id": "35", "bianma": "100205", "mingcheng": "批发商", "name": "批发商"}]
-        }, {
-            "id": "27",
-            "bianma": "1003",
-            "mingcheng": "协作单位",
-            "name": "协作单位",
-            "tree": [{"id": "40", "bianma": "100301", "mingcheng": "物流", "name": "物流"}, {
-                "id": "42",
-                "bianma": "100302",
-                "mingcheng": "报关",
-                "name": "报关"
-            }]
-        }];
 
         $scope.toggleCollapse = function(item){
             $scope.collapse = !$scope.collapse;
-            console.log($scope.collapse)
+
+            console.debug(item);
+
+            showSecondLevelOptionsAndLoadOptions(item);
+
         };
 
         $scope.customTemplate = 'item_default_renderer';
@@ -185,6 +145,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             }
         };
 
+        //showSecondLevelOptionsAndLoadOptions TODO
         $rootScope.$on('search-report-conditions-load-event', function (event, data) {
 
             if (data.conditions) {
@@ -208,16 +169,19 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                         angular.forEach(value, function(o, k) {
 
                             if (o.bianma && o.bianma.length == 4) {
-                                firstLevelOptions.push(o);
 
                                 o.name = o.mingcheng;
                                 o.checked = true;
-                                $scope.optionTreeObject.push(o);
+                                firstLevelOptions.push(o);
                             }
                         });
 
-                        buildTreeObjectForMenu();
+                        buildTreeObjectForMenu(firstLevelOptions);
+
+                        $scope.optionTreeObject = firstLevelOptions;
+
                         $scope.menuOptions = firstLevelOptions;
+
 
                     } else {
                         $scope.options = value;
@@ -225,10 +189,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
                     $scope.currentOptionsType = key;
 
-                    console.debug(key);
-                    console.debug(value);
-
-                    // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
 
                 });
@@ -237,9 +197,9 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             UtilService.closeLoadingScreen();
         });
 
-        function buildTreeObjectForMenu() {
+        function buildTreeObjectForMenu(options) {
 
-            angular.forEach($scope.optionTreeObject, function(value, index) {
+            angular.forEach(options, function(value, index) {
                 console.debug('checking .. ' + JSON.stringify(value));
 
                 var nextLevelOptionArray = findNextLevelOptions(value);
@@ -248,11 +208,12 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
                 if (nextLevelOptionArray.length > 0 ) {
                     value.tree = nextLevelOptionArray;
+                    buildTreeObjectForMenu(nextLevelOptionArray);
                 }
 
             });
 
-            console.debug('found' + JSON.stringify($scope.optionTreeObject));
+
         };
 
         function findNextLevelOptions(inputOption) {

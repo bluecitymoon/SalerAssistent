@@ -1,11 +1,18 @@
-<ion-view view-title="数据">
+<ion-view view-title="数据录入">
   <ion-content>
 
-    <ion-list>
+    <ion-list style="margin-top: 5px;">
+      <ion-item collection-repeat="type in types"
+                collection-item-height="itemHeight"
+                collection-item-width="'33%'"
+                href="#/searchreport/{{type.id}}" style="font-size: 1em; text-align: center">
+        <i class="ion-android-clipboard" style="font-size: 2.5em"></i>
 
-      <ion-item class="item-remove-animate item-avatar item-icon-right">
-        TODO
+        <div class="row">
+          {{type.mingcheng}}
+        </div>
       </ion-item>
     </ion-list>
+
   </ion-content>
 </ion-view>

@@ -33,6 +33,42 @@ angular.module('starter.services', [])
         }
     })
 
+    .factory('DataService', function ($http, ServerRoot, $rootScope, UtilService) {
+
+        var userData = {};
+        if (mode == 'DEBUG') {
+            userData = {username: 'admin', token: '0DPiKuNIrrVmD8IUCuw1hQxNqZc='};
+        } else {
+            userData = {username: loginUser.username, token: loginUser.token};
+        }
+
+        function getTypes() {
+
+            UtilService.showLoadingScreen();
+            $http({
+                url: ServerRoot + 'report/getreport',
+                data: userData,
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+
+                if (response.code) {
+                    UtilService.showAlert(response.message);
+                } else {
+                    $rootScope.$emit('data-type-load-event', {types: response});
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+
+        }
+
+        return {
+            getTypes: getTypes
+        }
+    })
+
     .factory('ReportService', function ($http, ServerRoot, $rootScope, UtilService) {
 
         var userData = null;
