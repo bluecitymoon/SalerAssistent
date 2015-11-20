@@ -1,0 +1,63 @@
+<ion-view view-title="{{title}}">
+
+    <ion-nav-buttons side="left">
+        <div class="button button-clear" ng-click="goback()">
+            返回
+        </div>
+    </ion-nav-buttons>
+
+    <ion-content>
+
+        <ion-list>
+
+            <div class="item item-input" ng-repeat="condition in tableDeinination.zhubiaogeshi | orderBy: 'xuhao'">
+                <span class="input-label">{{condition.mingcheng}}</span>
+
+                <input type="text" ng-model="condition.morenzhi" placeholder="{{condition.id}}">
+
+                <button class="button button-clear" ng-click="openAutoComplete(condition)" ng-show="condition.cankaodangan"><i class="icon ion-ios-search-strong"></i></button>
+
+            </div>
+        </ion-list>
+
+        <div class="card" ng-show="detailCreationPageVisible">
+            <ion-list>
+
+                <div class="item item-input" ng-repeat="childCondition in tableDeinination.zibiaogeshi | orderBy: 'xuhao'">
+                    <span class="input-label">{{childCondition.mingcheng}}</span>
+
+                    <input type="text" ng-model="childCondition.morenzhi" placeholder="{{childCondition.id}}">
+
+                    <button class="button button-clear" ng-click="openAutoComplete(childCondition)" ng-show="childCondition.cankaodangan"><i class="icon ion-ios-search-strong"></i></button>
+
+                </div>
+            </ion-list>
+            <div class="item tabs tabs-secondary tabs-icon-left">
+                <a class="tab-item" href="#" ng-click="greetPost(post)" ng-disabled="post.disabled">
+                    <i class="icon ion-thumbsup"></i>
+                    确定
+                </a>
+                <a class="tab-item" href="#" ng-click="showCommentDialog(post); $event.stopPropagation()">
+                    <i class="icon ion-chatbox"></i>
+                    取消
+                </a>
+            </div>
+        </div>
+
+        <div class="padding" ng-show="tableDeinination.zibiaogeshi && tableDeinination.zibiaogeshi.length > 0">
+            <button class="button button-block button-balanced" ng-click="toggleDetailCreationPage()">
+                添加详情
+            </button>
+        </div>
+
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="submitData()">
+                提交
+            </button>
+        </div>
+    </ion-content>
+    <!--
+    <div class="bar bar-footer bar-positive" ng-click="searchReport()">
+        <button class="button button-clear title">搜索</button>
+    </div> -->
+</ion-view>

@@ -48,7 +48,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         };
     })
 
-    .controller('DataCtrl', function ($scope, DataService, $rootScope, UtilService, $window) {
+    .controller('DataTypesCtrl', function ($scope, DataService, $rootScope, UtilService, $window) {
         $scope.$on('$ionicView.enter', function (e) {
             DataService.getTypes();
         });
@@ -66,6 +66,44 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         $scope.itemHeight = $window.innerWidth / 3;
     })
+
+    .controller('DataCtrl', function ($scope, DataService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state) {
+
+        $scope.title = $stateParams.typename;
+        $scope.detailCreationPageVisible = false;
+        $scope.$on('$ionicView.enter', function (e) {
+
+            var typeId = $stateParams.typeid;
+
+            DataService.loadDataSearchConditions(typeId);
+
+        });
+
+        $scope.tableDeinination = {};
+
+        $scope.toggleDetailCreationPage = function() {
+
+            $scope.detailCreationPageVisible = !$scope.detailCreationPageVisible;
+
+        };
+
+        $rootScope.$on('search-data-conditions-load-event', function (event, data) {
+
+            if (data.conditions) {
+                $scope.tableDeinination = data.conditions;
+            }
+            UtilService.closeLoadingScreen();
+        });
+
+        $scope.submitData = function() {
+
+        };
+
+        $scope.goback = function () {
+            $ionicHistory.goBack();
+        };
+    })
+
     .controller('ReportTypesCtrl', function ($scope, ReportService, $rootScope, UtilService, $window) {
 
         $scope.$on('$ionicView.enter', function (e) {

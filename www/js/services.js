@@ -46,7 +46,7 @@ angular.module('starter.services', [])
 
             UtilService.showLoadingScreen();
             $http({
-                url: ServerRoot + 'report/getreport',
+                url: ServerRoot + 'danju/getdanju',
                 data: userData,
                 method: 'POST'
             }).success(function (response, status, headers, config) {
@@ -64,8 +64,55 @@ angular.module('starter.services', [])
 
         }
 
+        function loadDataSearchConditions(datatypeid) {
+            UtilService.showLoadingScreen();
+            //var copiedUserData = userData;
+            //copiedUserData.bbid = reportid;
+
+            if (mode == 'DEBUG') {
+
+            }
+
+
+            $http({
+                url: ServerRoot + 'danju/getdanjugeshi',
+                data: {username: loginUser.username, token: loginUser.token, id: datatypeid},
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                console.debug(response);
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+                    $rootScope.$emit('search-data-conditions-load-event', {conditions: response});
+
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
+
+        var currentDataType = '';
+
+        function setCurrentDataType(type) {
+            currentDataType = type;
+        }
+
+        function getCurrentDataType() {
+            return currentDataType;
+        }
+
         return {
-            getTypes: getTypes
+            getTypes: getTypes,
+            loadDataSearchConditions: loadDataSearchConditions,
+            setCurrentDataType: setCurrentDataType,
+            getCurrentDataType: getCurrentDataType
         }
     })
 

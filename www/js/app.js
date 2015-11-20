@@ -70,9 +70,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 views: {
                     'tab-data': {
                         templateUrl: 'templates/tab-data.html',
-                        controller: 'DataCtrl'
+                        controller: 'DataTypesCtrl'
                     }
                 }
+            })
+
+            .state('data-search', {
+                url: '/data/:typeid/:typename',
+                templateUrl: 'templates/data/data-input.html',
+                controller: 'DataCtrl'
+
             })
 
             .state('tab.chats', {
