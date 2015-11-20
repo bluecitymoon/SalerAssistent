@@ -108,11 +108,40 @@ angular.module('starter.services', [])
             return currentDataType;
         }
 
+        function loadDataAutocompleteOptions(id) {
+
+            UtilService.showLoadingScreen();
+            //var copiedUserData = userData;
+            //copiedUserData.cankaodangan = cankaodangan;
+            $http({
+                url: ServerRoot + 'canzhaoshuju/getzhubiaoshuju',
+                data: {username: loginUser.username, token: loginUser.token, id: id},
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                console.debug(response);
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+                    $rootScope.$emit('search-data-options-load-event', {options: response});
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
+
         return {
             getTypes: getTypes,
             loadDataSearchConditions: loadDataSearchConditions,
             setCurrentDataType: setCurrentDataType,
-            getCurrentDataType: getCurrentDataType
+            getCurrentDataType: getCurrentDataType,
+            loadDataAutocompleteOptions: loadDataAutocompleteOptions,
         }
     })
 

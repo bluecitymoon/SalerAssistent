@@ -1,18 +1,19 @@
 <ion-view view-title="选择报表">
     <ion-content>
 
-        <ion-list style="margin-top: 5px;">
-            <ion-item collection-repeat="type in types"
-                      collection-item-height="itemHeight"
-                      collection-item-width="'33%'"
-                      href="#/searchreport/{{type.id}}" style="font-size: 1em; text-align: center">
-                <i class="ion-android-clipboard" style="font-size: 2.5em"></i>
+        <div class="pending">
+            <ion-list style="margin-top: 5px;">
+                <ion-item collection-repeat="type in types"
+                          collection-item-height="itemHeight"
+                          collection-item-width="'33%'"
+                          href="#/searchreport/{{type.id}}" style="font-size: 1em; text-align: center">
+                    <i class="ion-android-clipboard" style="font-size: 2.5em"></i>
 
-                <div class="row">
-                    {{type.mingcheng}}
-                </div>
-            </ion-item>
-        </ion-list>
-
+                    <div class="row">
+                        {{type.mingcheng}}
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
     </ion-content>
 </ion-view>
