@@ -1,6 +1,6 @@
 angular.module('starter.datacontrollers', ['ionic-datepicker'])
 
-    .controller('DataCtrl', function ($scope, DataService,ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state) {
+    .controller('DataCtrl', function ($scope, DataService,ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state, $ionicScrollDelegate) {
 
         $scope.title = $stateParams.typename;
 
@@ -13,8 +13,30 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         });
 
         $scope.tableDeinination = {};
+        $scope.childTableData = [];
 
-        $scope.toggleDetailCreationPage = function() {
+        $scope.saveData = function() {
+
+            DataService.saveData($scope.tableDeinination.zhubiaogeshi, $scope.childTableData, saveReportSuccess);
+        };
+
+        function saveReportSuccess() {
+
+            UtilService.showAlert("保存成功！");
+
+            UtilService.closeLoadingScreen();
+
+        }
+
+        var originalChildTableDefinination = [];
+
+        $scope.toggleDetailCreationPage = function(childDataDefinination) {
+
+            if (childDataDefinination) {
+                $scope.tableDeinination.zibiaogeshi = childDataDefinination;
+            } else {
+                $scope.tableDeinination.zibiaogeshi = angular.copy(originalChildTableDefinination);
+            }
 
             $scope.dataDetailModal.show();
 
@@ -28,13 +50,31 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
                 $scope.modal.hide();
             }
 
+        };
 
+        $scope.assignSingleDetail = function() {
+
+            $scope.childTableData.push(angular.copy($scope.tableDeinination.zibiaogeshi));
+
+            $scope.dataDetailModal.hide();
+
+            $ionicScrollDelegate.scrollBottom();
+        };
+
+        $scope.removeSingleChildData = function(child) {
+
+            var index = $scope.childTableData.indexOf(child);
+            $scope.childTableData.splice(index, 1);
         };
 
         $rootScope.$on('search-data-conditions-load-event', function (event, data) {
 
             if (data.conditions) {
                 $scope.tableDeinination = data.conditions;
+
+                if ($scope.tableDeinination.zibiaogeshi) {
+                    originalChildTableDefinination = angular.copy($scope.tableDeinination.zibiaogeshi);
+                }
             }
             UtilService.closeLoadingScreen();
         });

@@ -136,12 +136,72 @@ angular.module('starter.services', [])
             });
         }
 
+        function saveData(primaryTableData, secondaryTableData, successCallback) {
+            UtilService.showLoadingScreen();
+
+            var primaryParam = [];
+            angular.forEach(primaryTableData, function(value, i) {
+
+                if (value.morenzhi) {
+                    var o = {id: value.id, morenzhi: value.morenzhi};
+                    primaryParam.push(o);
+                }
+
+            });
+
+            var secondaryParam = [];
+            angular.forEach(secondaryTableData, function(value, i) {
+
+                var singleSecondary = [];
+                angular.forEach(value, function(single, j) {
+
+                    if (single.morenzhi) {
+                        var o = {id: single.id, morenzhi: single.morenzhi};
+                        singleSecondary.push(o);
+                    }
+                });
+
+                if (singleSecondary.length > 0) {
+                    secondaryParam.push(singleSecondary);
+                }
+            });
+
+            var postData = {username: loginUser.username, token: loginUser.token, zhubiao: JSON.stringify(primaryParam), zibiao: JSON.stringify(secondaryParam)};
+
+            console.debug(JSON.stringify(postData));
+
+            $http({
+                url: ServerRoot + 'danju/adddanju',
+                data: postData,
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                console.debug(response);
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+
+                    if(successCallback) {
+                        successCallback();
+                    }
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
         return {
             getTypes: getTypes,
             loadDataSearchConditions: loadDataSearchConditions,
             setCurrentDataType: setCurrentDataType,
             getCurrentDataType: getCurrentDataType,
             loadDataAutocompleteOptions: loadDataAutocompleteOptions,
+            saveData: saveData
         }
     })
 
@@ -177,8 +237,6 @@ angular.module('starter.services', [])
 
         function loadReportSearchConditions(reportid) {
             UtilService.showLoadingScreen();
-            //var copiedUserData = userData;
-            //copiedUserData.bbid = reportid;
 
             $http({
                 url: ServerRoot + 'report/getreporttj',

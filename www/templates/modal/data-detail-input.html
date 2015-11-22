@@ -1,8 +1,12 @@
-<ion-view view-title="{{title}}">
+<ion-modal-view>
 
     <ion-header-bar>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeDetailDialog()">取消</button>
+            <button class="button button-clear" ng-click="closeDetailDialog('1')">取消</button>
+        </div>
+        <h1 class="title">{{title}}详情</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="assignSingleDetail()">确定</button>
         </div>
     </ion-header-bar>
     <ion-content>
@@ -18,7 +22,6 @@
 
             </div>
         </ion-list>
-
     </ion-content>
 
-</ion-view>
+</ion-modal-view>

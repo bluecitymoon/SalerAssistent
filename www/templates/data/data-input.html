@@ -1,13 +1,13 @@
-<ion-view view-title="<p class=balanced>{{title}}</p>">
+<ion-view view-title="{{title}}">
 
     <ion-nav-buttons side="left">
-        <div class="button button-balanced" ng-click="goback()">
+        <div class="button button-clear" ng-click="goback()">
             返回
         </div>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right" ng-show="tableDeinination.zibiaogeshi && tableDeinination.zibiaogeshi.length > 0">
-        <div class="button button-balanced" ng-click="toggleDetailCreationPage()">
+        <div class="button button-clear" ng-click="toggleDetailCreationPage()">
             增加详细
         </div>
     </ion-nav-buttons>
@@ -21,13 +21,36 @@
 
                 <input type="text" ng-model="condition.morenzhi" placeholder="{{condition.id}}">
 
-                <button class="button button-clear" ng-click="openAutoComplete(condition)" ng-show="condition.cankaodangan"><i class="icon ion-ios-search-strong"></i></button>
+                <button class="button button-clear" ng-click="openAutoComplete(condition)"
+                        ng-show="condition.cankaodangan"><i class="icon ion-ios-search-strong"></i></button>
 
             </div>
         </ion-list>
+        <br>
+        <div ng-show="childTableData.length > 0" delegate-handle="detailScroll">
+            <div class="item item-divider" style="text-align: center">
+                详情列表
+            </div>
+
+            <ion-list ng-repeat="childDefineArray in childTableData">
+                <ion-item ng-click="toggleDetailCreationPage(childDefineArray)">
+                    <div class="row">
+                        <p ng-repeat="child in childDefineArray">
+                            {{child.morenzhi}} &nbsp;
+                        </p>
+
+                        <ion-option-button class="button-assertive" ng-click="removeSingleChildData(child)">
+                            删除
+                        </ion-option-button>
+                    </div>
+
+                </ion-item>
+            </ion-list>
+
+        </div>
 
         <div class="padding">
-            <button class="button button-block button-positive" ng-click="submitData()">
+            <button class="button button-block button-positive" ng-click="saveData()">
                 提交
             </button>
         </div>
