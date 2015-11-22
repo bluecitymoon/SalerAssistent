@@ -464,11 +464,30 @@ angular.module('starter.services', [])
             }
         }
 
+        var icons = ['ion-ios-list-outline', 'ion-ios-book', 'ion-ios-compose-outline', 'ion-ios-paper-outline', 'ion-ios-calendar-outline', 'ion-ios-albums-outline',
+        'ion-ios-briefcase-outline', 'ion-android-calendar', 'ion-android-cloud-outline', 'ion-bag'];
+        function getIconByIndex(index) {
+
+            if (index > icons.length) {
+                return 'ion-ios-list-outline';
+            }
+            return icons[index];
+        }
+
+        var colors = ['positive', 'balanced', 'assertive', 'royal'];
+        function getRandomColor() {
+
+            var index = Math.floor((Math.random() * 10) / 3) ;
+            return colors[index];
+        }
+
         return {
             showLoadingScreen: showLoadingScreen,
             closeLoadingScreen: closeLoadingScreen,
             showAlert: showAlert,
-            handleCommonServerError : handleCommonServerError
+            handleCommonServerError : handleCommonServerError,
+            getIconByIndex: getIconByIndex,
+            getRandomColor: getRandomColor
         }
     })
 

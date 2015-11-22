@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+
+.sub-page-icon {
+    font-size: 1em;
+    text-align: center;
+    vertical-align: bottom;
+    overflow: visible !important;
+}

@@ -21,11 +21,11 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         };
 
         function saveReportSuccess() {
-
-            UtilService.showAlert("保存成功！");
-
             UtilService.closeLoadingScreen();
 
+            UtilService.showAlert("保存成功！", function() {
+                $state.go('tab.data');
+            });
         }
 
         var originalChildTableDefinination = [];

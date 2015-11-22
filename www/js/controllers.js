@@ -60,6 +60,11 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             if (data.types) {
                 $scope.types = data.types;
 
+                angular.forEach($scope.types, function(value, index) {
+
+                    value.icon = UtilService.getIconByIndex(index + 4);
+                    value.customColor = UtilService.getRandomColor();
+                });
             }
             UtilService.closeLoadingScreen();
         });
@@ -79,6 +84,11 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             if (data.types) {
                 $scope.types = data.types;
+
+                angular.forEach($scope.types, function(value, index) {
+
+                    value.icon = UtilService.getIconByIndex(index);
+                });
 
             }
             UtilService.closeLoadingScreen();
