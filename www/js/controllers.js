@@ -1,4 +1,4 @@
- angular.module('starter.controllers', ['ionic-datepicker'])
+angular.module('starter.controllers', ['ionic-datepicker'])
 
     .controller('LoginCtrl', function ($scope, AuthenticationService, $state, $rootScope, $ionicPopup, UtilService) {
 
@@ -89,31 +89,31 @@
 
     .controller('ReportResultCtrl', function ($rootScope, $scope, $state, UtilService, ReportService, $ionicModal) {
 
-         $scope.currentPageNumber = 1;
-         $scope.message = { pullingText : '下拉加载下一页'};
+        $scope.currentPageNumber = 1;
+        $scope.message = {pullingText: '下拉加载下一页'};
         $scope.$on('$ionicView.enter', function (e) {
 
             ReportService.queryReport(ReportService.getLastSearchCondition(), $scope.currentPageNumber);
 
         });
 
-         $scope.selectedReport = {};
-         $scope.showReportDetail = function(report) {
-             $scope.selectedReport = report;
+        $scope.selectedReport = {};
+        $scope.showReportDetail = function (report) {
+            $scope.selectedReport = report;
 
-             $scope.modal.show();
-         };
+            $scope.modal.show();
+        };
 
         $scope.reports = [];
-         $scope.top3Attributes = [];
-         $scope.firtName = '';
-         var top3AttributesFound = false;
+        $scope.top3Attributes = [];
+
+        var top3AttributesFound = false;
         $rootScope.$on('search-report-load-event', function (event, data) {
 
             if (data.reports) {
 
-                angular.forEach(data.reports, function(value, index) {
-                   $scope.reports.push(value);
+                angular.forEach(data.reports, function (value, index) {
+                    $scope.reports.push(value);
                 });
 
                 if (!top3AttributesFound) {
@@ -124,11 +124,6 @@
                     $scope.top3Attributes.push(singleReportKeys[1]);
                     $scope.top3Attributes.push(singleReportKeys[2]);
 
-                    $scope.firtName = singleReportKeys[0];
-                    $scope.secondName = singleReportKeys[1];
-                    $scope.thirdName = singleReportKeys[2];
-
-                    console.debug(JSON.stringify($scope.top3Attributes));
                 }
 
             } else {
@@ -138,33 +133,32 @@
             UtilService.closeLoadingScreen();
         });
 
-         $ionicModal.fromTemplateUrl('templates/modal/single-report-detail.html', {
-             scope: $scope,
-             animation: 'slide-in-up'
-         }).then(function (modal) {
-             $scope.modal = modal;
-         });
+        $ionicModal.fromTemplateUrl('templates/modal/single-report-detail.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            $scope.modal = modal;
+        });
 
-         $scope.closeAutoCompleteDialog = function () {
-             $scope.modal.hide();
+        $scope.closeAutoCompleteDialog = function () {
+            $scope.modal.hide();
 
-         };
+        };
 
-         //Cleanup the modal when we're done with it!
-         $scope.$on('$destroy', function () {
-             $scope.modal.remove();
-         });
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.modal.remove();
+        });
 
-         // Execute action on hide modal
-         $scope.$on('modal.hidden', function () {
-             $scope.currentPageIndex = 1;
-             $scope.options = [];
-         });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function () {
 
-         // Execute action on remove modal
-         $scope.$on('modal.removed', function () {
-             // Execute action
-         });
+        });
+
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function () {
+            // Execute action
+        });
     })
 
     .controller('ReportSearchCtrl', function ($scope, ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state) {
@@ -186,7 +180,7 @@
 
         $scope.collapse = true;
 
-        $scope.toggleCollapse = function(item){
+        $scope.toggleCollapse = function (item) {
             $scope.collapse = !$scope.collapse;
 
             showSecondLevelOptionsAndLoadOptions(item);
@@ -195,7 +189,7 @@
 
         $scope.customTemplate = 'item_default_renderer';
 
-        $scope.toggleTemplate = function() {
+        $scope.toggleTemplate = function () {
             if ($scope.customTemplate == 'ion-item.tmpl.html') {
                 $scope.customTemplate = 'item_default_renderer'
             } else {
@@ -218,14 +212,14 @@
         $rootScope.$on('search-report-options-load-event', function (event, data) {
 
             if (data.options) {
-                angular.forEach(data.options, function(value, key) {
+                angular.forEach(data.options, function (value, key) {
 
                     if (key == 'leibie') {
                         $scope.allOptions = value;
 
 
                         var firstLevelOptions = [];
-                        angular.forEach(value, function(o, k) {
+                        angular.forEach(value, function (o, k) {
 
                             if (o.bianma && o.bianma.length == 4) {
 
@@ -258,11 +252,11 @@
 
         function buildTreeObjectForMenu(options) {
 
-            angular.forEach(options, function(value, index) {
+            angular.forEach(options, function (value, index) {
 
                 var nextLevelOptionArray = findNextLevelOptions(value);
 
-                if (nextLevelOptionArray.length > 0 ) {
+                if (nextLevelOptionArray.length > 0) {
                     value.tree = nextLevelOptionArray;
                     buildTreeObjectForMenu(nextLevelOptionArray);
                 }
@@ -275,14 +269,14 @@
 
             var secondLevelOptions = [];
             var firstLevelOptionLength = inputOption.bianma.length;
-            angular.forEach($scope.allOptions, function(option, i) {
+            angular.forEach($scope.allOptions, function (option, i) {
 
                 if (option.bianma) {
 
                     var secondLevelOptionLength = option.bianma.length;
                     var gap = secondLevelOptionLength - firstLevelOptionLength;
 
-                    if(gap == 2 && option.bianma.indexOf(inputOption.bianma) > -1 ) {
+                    if (gap == 2 && option.bianma.indexOf(inputOption.bianma) > -1) {
 
                         option.name = option.mingcheng;
                         option.checked = true;
@@ -295,20 +289,20 @@
             return secondLevelOptions;
         };
 
-         $scope.closeDetailDialog = function() {
-             $scope.modal.hide();
+        $scope.closeDetailDialog = function () {
+            $scope.modal.hide();
 
-         };
-        $scope.showSecondLevelOptionsAndLoadOptions = function($event) {
+        };
+        $scope.showSecondLevelOptionsAndLoadOptions = function ($event) {
 
             var optionId = $event.target.id;
             if (optionId) {
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1 );
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1);
             }
         };
 
-        $scope.keywordCondition = {name : ''};
-        $scope.searchFinalOptions = function(option) {
+        $scope.keywordCondition = {name: ''};
+        $scope.searchFinalOptions = function (option) {
 
             var keyword = '';
             if (option && option.mingcheng) {
@@ -317,23 +311,23 @@
                 keyword = $scope.keywordCondition;
             }
 
-            ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
+            ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, keyword);
 
         };
 
         $scope.currentPageIndex = 1;
-        $scope.searchOptionsWithKeyword = function(wantNextPage) {
+        $scope.searchOptionsWithKeyword = function (wantNextPage) {
 
-            if (wantNextPage) $scope.currentPageIndex ++;
+            if (wantNextPage) $scope.currentPageIndex++;
 
             ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
 
         };
 
-        $rootScope.$on('search-option-detail-load-event', function(event, data) {
+        $rootScope.$on('search-option-detail-load-event', function (event, data) {
 
             var detailOptionsList = data.detailOptions;
-            if(detailOptionsList) {
+            if (detailOptionsList) {
 
                 $scope.options = detailOptionsList;
             }
@@ -342,14 +336,14 @@
 
         });
 
-        $scope.showSecondLevelOptionsOrCloseDialog = function(option) {
+        $scope.showSecondLevelOptionsOrCloseDialog = function (option) {
 
             $scope.currentSelectCondition.moren1 = option.mingcheng;
             $scope.modal.hide();
 
         };
 
-        $scope.queryReport = function() {
+        $scope.queryReport = function () {
 
             ReportService.setLastSearchCondition($scope.conditions);
             $state.go('report-search-result');
@@ -373,9 +367,9 @@
             todayLabel: '今天',  //Optional
             closeLabel: '关闭',  //Optional
             setLabel: '设置',  //Optional
-            setButtonType : 'button-assertive',  //Optional
-            todayButtonType : 'button-calm',  //Optional
-            closeButtonType : 'button-calm',  //Optional
+            setButtonType: 'button-assertive',  //Optional
+            todayButtonType: 'button-calm',  //Optional
+            closeButtonType: 'button-calm',  //Optional
             inputDate: new Date(),  //Optional
             mondayFirst: true,  //Optional
             weekDaysList: weekDaysList, //Optional
@@ -394,7 +388,7 @@
         };
 
         $scope.currentSelectPositionType = 'moren1';
-        $scope.openDateDialog = function(condition, type) {
+        $scope.openDateDialog = function (condition, type) {
 
             $scope.currentSelectCondition = condition;
             $scope.currentSelectPositionType = type;
