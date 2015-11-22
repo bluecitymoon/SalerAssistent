@@ -1,0 +1,21 @@
+<ion-modal-view>
+
+    <ion-header-bar>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeAutoCompleteDialog()">取消</button>
+        </div>
+        <h1 class="title">报表详情</h1>
+
+    </ion-header-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="(key, value) in selectedReport">
+                <span>{{key}}</span>
+
+                <p>{{value}}</p>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+
+</ion-modal-view>

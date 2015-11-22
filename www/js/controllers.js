@@ -87,25 +87,84 @@
         $scope.itemHeight = $window.innerWidth / 3;
     })
 
-    .controller('ReportResultCtrl', function ($rootScope, $scope, $state, UtilService, ReportService) {
+    .controller('ReportResultCtrl', function ($rootScope, $scope, $state, UtilService, ReportService, $ionicModal) {
 
-        $scope.currentPageNumber = 1;
+         $scope.currentPageNumber = 1;
+         $scope.message = { pullingText : '下拉加载下一页'};
         $scope.$on('$ionicView.enter', function (e) {
 
             ReportService.queryReport(ReportService.getLastSearchCondition(), $scope.currentPageNumber);
+
         });
 
+         $scope.selectedReport = {};
+         $scope.showReportDetail = function(report) {
+             $scope.selectedReport = report;
+
+             $scope.modal.show();
+         };
+
         $scope.reports = [];
+         $scope.top3Attributes = [];
+         $scope.firtName = '';
+         var top3AttributesFound = false;
         $rootScope.$on('search-report-load-event', function (event, data) {
 
             if (data.reports) {
-                $scope.reports = data.reports;
-                console.debug(data.reports);
 
+                angular.forEach(data.reports, function(value, index) {
+                   $scope.reports.push(value);
+                });
+
+                if (!top3AttributesFound) {
+                    var singleReportKeys = Object.keys(data.reports[0]);
+                    top3AttributesFound = true;
+
+                    $scope.top3Attributes.push(singleReportKeys[0]);
+                    $scope.top3Attributes.push(singleReportKeys[1]);
+                    $scope.top3Attributes.push(singleReportKeys[2]);
+
+                    $scope.firtName = singleReportKeys[0];
+                    $scope.secondName = singleReportKeys[1];
+                    $scope.thirdName = singleReportKeys[2];
+
+                    console.debug(JSON.stringify($scope.top3Attributes));
+                }
+
+            } else {
+                $scope.message.pullingText = '已没有更多数据';
             }
 
             UtilService.closeLoadingScreen();
         });
+
+         $ionicModal.fromTemplateUrl('templates/modal/single-report-detail.html', {
+             scope: $scope,
+             animation: 'slide-in-up'
+         }).then(function (modal) {
+             $scope.modal = modal;
+         });
+
+         $scope.closeAutoCompleteDialog = function () {
+             $scope.modal.hide();
+
+         };
+
+         //Cleanup the modal when we're done with it!
+         $scope.$on('$destroy', function () {
+             $scope.modal.remove();
+         });
+
+         // Execute action on hide modal
+         $scope.$on('modal.hidden', function () {
+             $scope.currentPageIndex = 1;
+             $scope.options = [];
+         });
+
+         // Execute action on remove modal
+         $scope.$on('modal.removed', function () {
+             // Execute action
+         });
     })
 
     .controller('ReportSearchCtrl', function ($scope, ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state) {
