@@ -19,7 +19,7 @@
 
         <div class="row">
             <div class="col" ng-show="currentOptionsType == 'leibie'">
-                <ion-tree-list items="optionTreeObject" collapsed="collapse" template-url="{{customTemplate}}"></ion-tree-list>
+                <ion-tree-list ng-click="showSecondLevelOptionsAndLoadOptions($event)" items="optionTreeObject" collapsed="collapse" template-url="{{customTemplate}}"></ion-tree-list>
             </div>
             <div class="col">
                 <ion-list>

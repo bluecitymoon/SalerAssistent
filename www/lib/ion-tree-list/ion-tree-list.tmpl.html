@@ -8,7 +8,7 @@
 </script>
 
 <script type="text/ng-template" id="items_renderer">
-    <ion-item class="item depth-{{item.depth}}"
+    <ion-item id="{{item.id}}" class="item depth-{{item.depth}}"
               ng-click="toggleCollapse(item)"
               ng-include="templateUrl">
     </ion-item>

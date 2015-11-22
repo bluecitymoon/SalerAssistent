@@ -130,8 +130,6 @@
         $scope.toggleCollapse = function(item){
             $scope.collapse = !$scope.collapse;
 
-            console.debug(item);
-
             showSecondLevelOptionsAndLoadOptions(item);
 
         };
@@ -157,6 +155,7 @@
 
         $scope.currentOptionsType = '';
         $scope.currentSelectCondition = {};
+
         $rootScope.$on('search-report-options-load-event', function (event, data) {
 
             if (data.options) {
@@ -201,11 +200,8 @@
         function buildTreeObjectForMenu(options) {
 
             angular.forEach(options, function(value, index) {
-                console.debug('checking .. ' + JSON.stringify(value));
 
                 var nextLevelOptionArray = findNextLevelOptions(value);
-
-                console.debug('found' + JSON.stringify(nextLevelOptionArray));
 
                 if (nextLevelOptionArray.length > 0 ) {
                     value.tree = nextLevelOptionArray;
@@ -213,7 +209,6 @@
                 }
 
             });
-
 
         };
 
@@ -241,18 +236,15 @@
             return secondLevelOptions;
         };
 
-        $scope.showSecondLevelOptionsAndLoadOptions = function(option) {
+         $scope.closeDetailDialog = function() {
+             $scope.modal.hide();
 
-            var secondLevelOptions = [];
+         };
+        $scope.showSecondLevelOptionsAndLoadOptions = function($event) {
 
-            if (option.bianma) {
-                secondLevelOptions = getSecondLevelOptions(option.bianma);
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, '', 1 );
-            }
-
-            if (secondLevelOptions.length > 0) {
-
-                $scope.menuOptions = secondLevelOptions;
+            var optionId = $event.target.id;
+            if (optionId) {
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1 );
             }
         };
 
@@ -275,13 +267,7 @@
 
             if (wantNextPage) $scope.currentPageIndex ++;
 
-            if ($scope.currentOptionsType == 'leibie') {
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, $scope.currentSelec.id,  $scope.keywordCondition.name);
-            } else {
-                //ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
-
-                ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
-            }
+            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
 
         };
 
@@ -302,29 +288,6 @@
             $scope.currentSelectCondition.moren1 = option.mingcheng;
             $scope.modal.hide();
 
-        };
-
-        function getSecondLevelOptions(firstLevelOption) {
-
-            var secondLevelOptions = [];
-            var firstLevelOptionLength = firstLevelOption.length;
-            angular.forEach($scope.allOptions, function(option, i) {
-
-                if (option.bianma && option.bianma.length > 4) {
-
-                    var secondLevelOptionLength = option.bianma.length;
-                    var gap = secondLevelOptionLength - firstLevelOptionLength;
-
-                    if(gap == 2 && option.bianma.indexOf(firstLevelOption) > -1 ) {
-                        //{text : option.mingcheng}
-                        option.name = option.mingcheng;
-
-                        secondLevelOptions.push(option);
-                    }
-                }
-            });
-
-            return secondLevelOptions;
         };
 
         $scope.queryReport = function() {
@@ -356,7 +319,6 @@
             closeButtonType : 'button-calm',  //Optional
             inputDate: new Date(),  //Optional
             mondayFirst: true,  //Optional
-            //disabledDates: disabledDates, //Optional
             weekDaysList: weekDaysList, //Optional
             monthList: monthList, //Optional
             templateType: 'modal', //Optional
@@ -369,7 +331,7 @@
                 datePickerCallback(val);
             },
             dateFormat: 'yyyy/MM/dd', //Optional
-            closeOnSelect: false //Optional
+            closeOnSelect: true //Optional
         };
 
         $scope.currentSelectPositionType = 'moren1';
@@ -385,14 +347,11 @@
                 console.log('Date not selected');
             } else {
 
-
                 if ($scope.currentSelectPositionType === 'moren2') {
                     $scope.currentSelectCondition.moren2 = val;
                 } else {
                     $scope.currentSelectCondition.moren1 = val;
                 }
-
-                console.log('Selected date is : ', val);
             }
         }
 

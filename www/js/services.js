@@ -11,9 +11,7 @@ angular.module('starter.services', [])
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
-
                 $rootScope.$emit('login-event', {response: response});
-                console.debug(response);
 
             }).error(function (response, status, headers, config) {
 
@@ -299,8 +297,6 @@ angular.module('starter.services', [])
                 data: {username: loginUser.username, token: loginUser.token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
-
-                console.debug(response);
 
                 if (response.code) {
 
