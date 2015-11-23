@@ -1,8 +1,9 @@
 angular.module('starter.controllers', ['ionic-datepicker'])
 
-    .controller('LoginCtrl', function ($scope, AuthenticationService, $state, $rootScope, $ionicPopup, UtilService) {
+    .controller('LoginCtrl', function ($scope, AuthenticationService, $state, $rootScope, $ionicPopup, UtilService, StorageService) {
 
-        $scope.user = {username: 'admin', password: 'admin'}
+        $scope.user = {username: '', password: null};
+
         $scope.signIn = function (user) {
 
             UtilService.showLoadingScreen('正在登录');
@@ -33,6 +34,10 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                             $state.go('tab.chats');
 
                             loginUser.token = response.token;
+
+                            var currentuser = {username: $scope.user.username, password: $scope.user.password, token: response.token};
+                            StorageService.setObject('currentuser', currentuser);
+
                             user = response;
                             break;
                         default:
@@ -63,7 +68,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                 angular.forEach($scope.types, function(value, index) {
 
                     value.icon = UtilService.getIconByIndex(index + 4);
-                    value.customColor = UtilService.getRandomColor();
+                    value.customColor = UtilService.getRandomColorName();
                 });
             }
             UtilService.closeLoadingScreen();
@@ -88,6 +93,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                 angular.forEach($scope.types, function(value, index) {
 
                     value.icon = UtilService.getIconByIndex(index);
+                    value.customColor = UtilService.getRandomColorName();
                 });
 
             }
@@ -471,18 +477,11 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         };
     })
 
-    .controller('ReportsNavigationCtrl', function ($scope, Chats) {
-
-        $scope.visibleReportsTypes = ['订单', '终端销量', '验收单', '退补单'];
-
-
-    })
-
     .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
         $scope.chat = Chats.get($stateParams.chatId);
     })
 
-    .controller('CustomerCtrl', function ($scope, $state, CustomerService) {
+    .controller('CustomerCtrl', function ($scope, $state, CustomerService, StorageService) {
         $scope.customers = [];
 
         $scope.dateCustomer = function (customer) {
@@ -497,7 +496,14 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.inputValue = null;
         $scope.searchCustomers = function (inputValue) {
             CustomerService.searchCustomers($scope, inputValue);
-        }
+        };
+
+        $scope.logoffUser = function() {
+
+
+            StorageService.setObject('currentuser', {});
+            $state.go('sign-in');
+        };
     })
 
     .controller('CustomerDetailController', function ($scope, CustomerService, $stateParams, $ionicHistory) {

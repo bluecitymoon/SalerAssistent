@@ -155,11 +155,8 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         function buildTreeObjectForMenu(options) {
 
             angular.forEach(options, function(value, index) {
-                console.debug('checking .. ' + JSON.stringify(value));
 
                 var nextLevelOptionArray = findNextLevelOptions(value);
-
-                console.debug('found' + JSON.stringify(nextLevelOptionArray));
 
                 if (nextLevelOptionArray.length > 0 ) {
                     value.tree = nextLevelOptionArray;

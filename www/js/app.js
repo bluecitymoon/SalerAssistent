@@ -18,6 +18,32 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.datacontrolle
 
     .constant('ServerRoot', 'http://www.hanthink.cc:808/hanthinkapi/')
 
+    .run(function($ionicPlatform, StorageService, $state) {
+        $ionicPlatform.ready(function() {
+            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+            // for form inputs)
+            if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                cordova.plugins.Keyboard.disableScroll(true);
+
+            }
+            if (window.StatusBar) {
+                // org.apache.cordova.statusbar required
+                StatusBar.styleDefault();
+            }
+
+            var loggedUser = StorageService.getObject('currentuser');
+
+            if (loggedUser && loggedUser.token) {
+                loginUser = loggedUser;
+
+                $state.go('tab.chats');
+            } else {
+                $state.go('sign-in');
+            }
+        });
+    })
+
     .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
         // Ionic uses AngularUI Router which uses the concept of states

@@ -33,12 +33,7 @@ angular.module('starter.services', [])
 
     .factory('DataService', function ($http, ServerRoot, $rootScope, UtilService) {
 
-        var userData = {};
-        if (mode == 'DEBUG') {
-            userData = {username: 'admin', token: '0DPiKuNIrrVmD8IUCuw1hQxNqZc='};
-        } else {
-            userData = {username: loginUser.username, token: loginUser.token};
-        }
+        var userData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token};
 
         function getTypes() {
 
@@ -74,7 +69,7 @@ angular.module('starter.services', [])
 
             $http({
                 url: ServerRoot + 'danju/getdanjugeshi',
-                data: {username: loginUser.username, token: loginUser.token, id: datatypeid},
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: datatypeid},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -113,7 +108,7 @@ angular.module('starter.services', [])
             //copiedUserData.cankaodangan = cankaodangan;
             $http({
                 url: ServerRoot + 'canzhaoshuju/getzhubiaoshuju',
-                data: {username: loginUser.username, token: loginUser.token, id: id},
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -164,9 +159,7 @@ angular.module('starter.services', [])
                 }
             });
 
-            var postData = {username: loginUser.username, token: loginUser.token, zhubiao: JSON.stringify(primaryParam), zibiao: JSON.stringify(secondaryParam)};
-
-            console.debug(JSON.stringify(postData));
+            var postData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, zhubiao: JSON.stringify(primaryParam), zibiao: JSON.stringify(secondaryParam)};
 
             $http({
                 url: ServerRoot + 'danju/adddanju',
@@ -205,12 +198,7 @@ angular.module('starter.services', [])
 
     .factory('ReportService', function ($http, ServerRoot, $rootScope, UtilService) {
 
-        var userData = null;
-        if (mode == 'DEBUG') {
-            userData = {username: 'admin', token: '0DPiKuNIrrVmD8IUCuw1hQxNqZc='};
-        } else {
-            userData = {username: loginUser.username, token: loginUser.token};
-        }
+        var userData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token};
 
         function getTypes() {
             UtilService.showLoadingScreen();
@@ -238,7 +226,7 @@ angular.module('starter.services', [])
 
             $http({
                 url: ServerRoot + 'report/getreporttj',
-                data: {username: loginUser.username, token: loginUser.token, bbid: reportid},
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, bbid: reportid},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -268,7 +256,7 @@ angular.module('starter.services', [])
             //copiedUserData.cankaodangan = cankaodangan;
             $http({
                 url: ServerRoot + 'canzhaoshuju/getshuju',
-                data: {username: loginUser.username, token: loginUser.token, id: id},
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -294,7 +282,7 @@ angular.module('starter.services', [])
 
             $http({
                 url: ServerRoot + 'canzhaoshuju/getshujulbfy',
-                data: {username: loginUser.username, token: loginUser.token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber},
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -320,7 +308,7 @@ angular.module('starter.services', [])
             if (page) {
                 pageNumber = page;
             }
-            var queryData = {username: loginUser.username, token: loginUser.token, id: id, guanjianzi: keyword, yeshu: pageNumber};
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id, guanjianzi: keyword, yeshu: pageNumber};
             console.debug(JSON.stringify(queryData));
             $http({
                 url: ServerRoot + 'canzhaoshuju/getshujucxfy',
@@ -358,7 +346,7 @@ angular.module('starter.services', [])
             });
 
             var conditionDataJSONstring = JSON.stringify(conditionData).replace(/"/g, '\'');
-            var queryData = {username: loginUser.username, token: loginUser.token, yeshu: pageNumber, tiaojian: conditionDataJSONstring};
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, yeshu: pageNumber, tiaojian: conditionDataJSONstring};
 
             $http({
                 url: ServerRoot + 'report/getreportdata',
@@ -420,7 +408,16 @@ angular.module('starter.services', [])
     })
 
     .
-    factory('UtilService', function ($ionicLoading, $ionicPopup) {
+    factory('UtilService', function ($ionicLoading, $ionicPopup, StorageService) {
+
+        var currentUser = null;
+        function getCurrentLoggedInUser() {
+            if (currentUser) {
+                return currentUser;
+            } else {
+                return StorageService.getObject("currentuser");
+            }
+        }
 
         function showLoadingScreen(message) {
 
@@ -475,9 +472,10 @@ angular.module('starter.services', [])
         }
 
         var colors = ['positive', 'balanced', 'assertive', 'royal'];
-        function getRandomColor() {
+        function getRandomColorName() {
 
             var index = Math.floor((Math.random() * 10) / 3) ;
+
             return colors[index];
         }
 
@@ -487,7 +485,8 @@ angular.module('starter.services', [])
             showAlert: showAlert,
             handleCommonServerError : handleCommonServerError,
             getIconByIndex: getIconByIndex,
-            getRandomColor: getRandomColor
+            getRandomColorName: getRandomColorName,
+            getCurrentLoggedInUser: getCurrentLoggedInUser
         }
     })
 
