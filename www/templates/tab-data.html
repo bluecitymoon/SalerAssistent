@@ -1,18 +1,19 @@
 <ion-view view-title="数据录入">
-  <ion-content>
+    <ion-content>
 
-    <ion-list style="margin-top: 5px;">
-      <ion-item collection-repeat="type in types"
-                collection-item-height="itemHeight"
-                collection-item-width="'33%'"
-                href="#/data/{{type.id}}/{{type.mingcheng}}" style="font-size: 1em; text-align: center">
-        <i class="{{type.icon}} {{type.customColor}}" style="font-size: 2.5em"></i>
+        <ion-list style="margin-top: 5px;">
+            <p style="margin-top: 1em !important;"></p>
+            <ion-item collection-repeat="type in types"
+                      collection-item-height="itemHeight"
+                      collection-item-width="'33%'"
+                      href="#/data/{{type.id}}/{{type.mingcheng}}" style="font-size: 1em; text-align: center">
+                <i class="{{type.icon}} {{type.customColor}}" style="font-size: 2.5em"></i>
 
-        <div class="row">
-          {{type.mingcheng}}
-        </div>
-      </ion-item>
-    </ion-list>
+                <div class="row">
+                    {{type.mingcheng}}
+                </div>
+            </ion-item>
+        </ion-list>
 
-  </ion-content>
+    </ion-content>
 </ion-view>

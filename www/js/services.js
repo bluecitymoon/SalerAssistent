@@ -301,7 +301,7 @@ angular.module('starter.services', [])
             });
         };
 
-        function searchOptionsWithKeyword(keyword, id, page) {
+        function searchOptionsWithKeyword(keyword, id, page, type) {
             UtilService.showLoadingScreen();
 
             var pageNumber = 1;
@@ -310,8 +310,14 @@ angular.module('starter.services', [])
             }
             var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id, guanjianzi: keyword, yeshu: pageNumber};
             console.debug(JSON.stringify(queryData));
+
+	        var url = 'canzhaoshuju/getshujucxfy';
+	        if ( type) {
+		        url = 'canzhaoshuju/getzhubiaoshujulbfy';
+	        }
+
             $http({
-                url: ServerRoot + 'canzhaoshuju/getshujucxfy',
+                url: ServerRoot + url,
                 data: queryData,
                 method: 'POST'
             }).success(function (response, status, headers, config) {

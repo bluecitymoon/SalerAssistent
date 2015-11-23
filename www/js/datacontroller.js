@@ -113,13 +113,14 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         $rootScope.$on('search-data-options-load-event', function (event, data) {
 
             if (data.options) {
-                angular.forEach(data.options, function(value, key) {
+                angular.forEach(data.options, function (value, key) {
 
                     if (key == 'leibie') {
                         $scope.allOptions = value;
 
+
                         var firstLevelOptions = [];
-                        angular.forEach(value, function(o, k) {
+                        angular.forEach(value, function (o, k) {
 
                             if (o.bianma && o.bianma.length == 4) {
 
@@ -137,7 +138,18 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
 
 
                     } else {
-                        $scope.options = value;
+
+                        if (value && value.length == 0) {
+
+                            $scope.thereisNoMorePages = true;
+                            UtilService.showAlert('没有发现数据');
+
+                        } else {
+                            angular.forEach(value, function (o, k) {
+
+                                $scope.options.unshift(o);
+                            });
+                        }
                     }
 
                     $scope.currentOptionsType = key;
@@ -146,11 +158,12 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
 
                 });
             } else {
-                UtilService.showAlert("无数据");
+                UtilService.showAlert('没有发现数据');
             }
 
             UtilService.closeLoadingScreen();
         });
+
 
         function buildTreeObjectForMenu(options) {
 
@@ -214,24 +227,29 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
                 keyword = $scope.keywordCondition;
             }
 
-            ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
+            DataService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
 
         };
 
         $scope.currentPageIndex = 1;
-        $scope.searchOptionsWithKeyword = function(wantNextPage) {
+        $scope.thereisNoMorePages = false;
+        $scope.searchOptionsWithKeyword = function (wantNextPage) {
 
-            if (wantNextPage) $scope.currentPageIndex ++;
+            if ($scope.thereisNoMorePages) {
 
-            if ($scope.currentOptionsType == 'leibie') {
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, $scope.currentSelec.id,  $scope.keywordCondition.name);
-            } else {
-                //ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
+                UtilService.showAlert('没有更多的数据了');
+                $scope.$broadcast('scroll.refreshComplete');
 
-                ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
+                return;
             }
 
+            if (wantNextPage) $scope.currentPageIndex++;
+
+            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex, $scope.sourceTypeForLikeQuery);
+
         };
+
+        $scope.sourceTypeForLikeQuery = 'Father';
 
         $rootScope.$on('search-option-detail-load-event', function(event, data) {
 
@@ -276,7 +294,9 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         };
 
 
-        $scope.openAutoComplete = function (condition) {
+        $scope.openAutoComplete = function (condition, sourceTypeForLikeQuery) {
+
+            $scope.sourceTypeForLikeQuery = sourceTypeForLikeQuery;
 
             $scope.currentSelectCondition = condition;
             $scope.options = [];

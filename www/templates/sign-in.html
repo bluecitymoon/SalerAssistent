@@ -1,27 +1,27 @@
-<ion-view view-title="用户登录" hide-nav-bar="true">
+<ion-view view-title="用户登录" hide-nav-bar="true" class="radial-center">
     <ion-content>
 
         <div class="padding text-center" style="margin-top: 5em">
-            <h1 class="positive">HanThink</h1>
+            <h1 class="balanced" style="letter-spacing: 3px; text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red;">HanThink</h1>
             <p class="real-gray">细心呵护您的业务</p>
         </div>
         <br>
         <div class="list">
             <label class="item item-input">
-                <span class="input-label">用户名</span>
-                <input type="text" ng-model="user.username" placeholder="此处输入您的用户名">
+                <span class="input-label big-letter-spacing">用户名</span>
+                <input type="text" class="big-letter-spacing" ng-model="user.username">
             </label>
             <label class="item item-input">
-                <span class="input-label">密码</span>
-                <input type="password" ng-model="user.password" placeholder="此处输入您的密码">
+                <span class="input-label big-letter-spacing">密码</span>
+                <input type="password" class="big-letter-spacing" ng-model="user.password">
             </label>
         </div>
         <div class="padding">
-            <button class="button button-block button-positive" ng-click="signIn(user)">
+            <button class="button button-block button-balanced" style="border-size: 2px" ng-click="signIn(user)">
                 登录
             </button>
             <p class="text-center">
-                <a href="tel: 17721308697">登录遇到问题</a>
+                <a class="button button-clear button-balanced" href="tel: 17721308697">登录遇到问题</a>
             </p>
         </div>
     </ion-content>

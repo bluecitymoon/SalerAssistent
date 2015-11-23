@@ -253,7 +253,18 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
 
                     } else {
-                        $scope.options = value;
+
+                        if (value && value.length == 0) {
+
+                            $scope.thereisNoMorePages = true;
+                            UtilService.showAlert('没有发现数据');
+
+                        } else {
+                            angular.forEach(value, function (o, k) {
+
+                                $scope.options.unshift(o);
+                            });
+                        }
                     }
 
                     $scope.currentOptionsType = key;
@@ -261,6 +272,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                     $scope.$broadcast('scroll.refreshComplete');
 
                 });
+            } else {
+                UtilService.showAlert('没有发现数据');
             }
 
             UtilService.closeLoadingScreen();
@@ -334,7 +347,19 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.currentPageIndex = 1;
         $scope.searchOptionsWithKeyword = function (wantNextPage) {
 
-            if (wantNextPage) $scope.currentPageIndex++;
+            if ($scope.thereisNoMorePages) {
+
+                UtilService.showAlert('没有更多的数据了');
+                $scope.$broadcast('scroll.refreshComplete');
+
+                return;
+            }
+
+            if (wantNextPage) {
+                $scope.currentPageIndex++;
+            } else {
+                
+            }
 
             ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
 
@@ -445,6 +470,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             $scope.currentPageIndex = 1;
             $scope.options = [];
+
+            $scope.thereisNoMorePages = false;
         };
 
         //Cleanup the modal when we're done with it!
