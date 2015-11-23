@@ -441,9 +441,9 @@ angular.module('starter.services', [])
 
             var alertPopup = $ionicPopup.alert({
                 title: '提示信息',
-                template: '<h4 style="white-space: nowrap; "> ' + message + '</h4>',
+                template: '<h5 style="white-space: nowrap; text-align: center"> ' + message + '</h5>',
                 okText: '确定',
-                okType: 'button button-block button-calm'
+                okType: 'button button-block button-positive'
             });
 
             if (callback) {

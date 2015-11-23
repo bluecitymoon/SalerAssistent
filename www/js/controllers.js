@@ -120,7 +120,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         var top3AttributesFound = false;
         $rootScope.$on('search-report-load-event', function (event, data) {
 
-            if (data.reports) {
+            if (data.reports && data.reports.length > 0) {
 
                 angular.forEach(data.reports, function (value, index) {
                     $scope.reports.push(value);
