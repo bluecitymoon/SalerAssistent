@@ -12,16 +12,16 @@
         </div>
     </ion-nav-buttons>
 
-    <ion-content>
+    <ion-content class="pending">
 
         <ion-list>
 
             <div class="item item-input" ng-repeat="condition in tableDeinination.zhubiaogeshi | orderBy: 'xuhao'">
                 <span class="input-label">{{condition.mingcheng}}</span>
 
-                <input type="text" ng-model="condition.morenzhi" placeholder="{{condition.id}}">
+                <input type="text" ng-model="condition.morenzhi" placeholder="{{condition.mingcheng}}">
 
-                <button class="button button-clear" ng-click="openAutoComplete(condition)"
+                <button class="button button-clear" ng-click="openAutoComplete(condition)" style="margin-right: 0.8em"
                         ng-show="condition.cankaodangan"><i class="icon ion-ios-search-strong positive"></i></button>
 
             </div>

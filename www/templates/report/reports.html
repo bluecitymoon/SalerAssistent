@@ -5,12 +5,11 @@
                 on-refresh="doRefresh()">
         </ion-refresher>
         <ion-list>
-            <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="report in reports"
-                      type="item-text-wrap" ng-click="showReportDetail(report)">
+            <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="report in reports" type="item-text-wrap" ng-click="showReportDetail(report)" style="padding: 0px !important;">
 
-                    <h2>{{report[top3Attributes[0]]}}</h2>
+                    <h2 style="margin-left: 2em !important;">{{report[top3Attributes[0]]}}</h2>
                     <div class="row">
-                        <div ng-if="top3Attributes.length > 1" class="col">
+                        <div ng-if="top3Attributes.length > 1" class="col" style="margin-left: 2em !important;">
                             <p>{{report[top3Attributes[1]]}}</p>
                         </div>
                         <div ng-if="top3Attributes.length > 2" class="col">
@@ -22,5 +21,22 @@
 
         </ion-list>
 
+        <div class="list" ng-if="!reports || reports.length == 0" style="vertical-align: middle !important;">
+            <br><br><br><br><br><br>
+            <div class="row">
+                <div class="col col-25"></div>
+                <div class="col col-50">
+
+                </div>
+                <div class="col col-25"></div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+                <div class="col col-25"></div>
+                <div class="col col-50" style="text-align: center; color: #D8D8D8; font-size: 1rem">
+                    没有查询结果
+                </div>
+                <div class="col col-25"></div>
+            </div>
+        </div>
     </ion-content>
 </ion-view>

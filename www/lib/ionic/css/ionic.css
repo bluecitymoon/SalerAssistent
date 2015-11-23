@@ -9055,7 +9055,9 @@ a.button {
   left: 0 !important;
   top: 0 !important;
   position: absolute !important;
-  z-index: 1; }
+  z-index: 1;
+  border-radius: 5px;
+}
 
 .collection-repeat-container {
   position: relative;

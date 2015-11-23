@@ -18,8 +18,8 @@
                     <div ng-switch="condition.sjleixing">
                         <div ng-switch-when="varchar(4000)">
                             <div class="row">
-                                <input type="text" ng-model="condition.moren1" placeholder="{{condition.id}}">
-                                <input type="text" ng-model="condition.moren2" placeholder="{{condition.id}}">
+                                <input type="text" ng-model="condition.moren1" placeholder="{{condition.mingcheng}}">
+                                <input type="text" ng-model="condition.moren2" placeholder="{{condition.mingcheng}}">
                             </div>
                         </div>
 
@@ -42,7 +42,7 @@
                     <div ng-switch="condition.sjleixing">
                         <div ng-switch-when="varchar(4000)" class="row">
 
-                            <input type="text" ng-model="condition.moren1" placeholder="{{condition.id}}">
+                            <input type="text" ng-model="condition.moren1" placeholder="{{condition.mingcheng}}">
                             <button class="button button-clear" ng-click="openAutoComplete(condition)"><i class="icon ion-ios-search-strong positive"></i></button>
                         </div>
                         <div ng-switch-when="datetime">

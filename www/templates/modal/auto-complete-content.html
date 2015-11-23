@@ -31,5 +31,23 @@
             </div>
 
         </div>
+
+        <div class="list" ng-if="!options || options.length == 0" style="vertical-align: middle !important;">
+            <br><br><br><br><br><br>
+            <div class="row">
+                <div class="col col-25"></div>
+                <div class="col col-50">
+
+                </div>
+                <div class="col col-25"></div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+                <div class="col col-25"></div>
+                <div class="col col-50" style="text-align: center; color: #D8D8D8; font-size: 1rem">
+                    没有查询结果
+                </div>
+                <div class="col col-25"></div>
+            </div>
+        </div>
     </ion-content>
 </ion-modal-view>
