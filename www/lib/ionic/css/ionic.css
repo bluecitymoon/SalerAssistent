@@ -5686,9 +5686,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
 .popup-head {
   padding: 15px 10px;
   border-bottom: 1px solid #eee;
-  text-align: center;
-  background-color: #28a54c
-}
+  text-align: center; }
 
 .popup-title {
   margin: 0;
@@ -9055,9 +9053,7 @@ a.button {
   left: 0 !important;
   top: 0 !important;
   position: absolute !important;
-  z-index: 1;
-  border-radius: 5px;
-}
+  z-index: 1; }
 
 .collection-repeat-container {
   position: relative;

@@ -1,4 +1,11 @@
 /* Empty. Add your own CSS if you like */
+.app-icon {
+    background-color: #fff;
+    background: url('../img/logo.png') center;
+    background-size: cover;
+    height: 130px;
+    margin: 0 auto;
+}
 
 .sub-page-icon {
     font-size: 1em;
@@ -8,12 +15,17 @@
 }
 
 .real-gray {
-    color : #b2b2b2
+    color: #b2b2b2
 }
 
 .big-letter-spacing {
     letter-spacing: 3px;
     font-size: 1.1em
+}
+
+.letter-red-shadow {
+    letter-spacing: 3px;
+    text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red;
 }
 
 .linearBg2 {

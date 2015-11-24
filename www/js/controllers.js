@@ -358,7 +358,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             if (wantNextPage) {
                 $scope.currentPageIndex++;
             } else {
-                
+
             }
 
             ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
