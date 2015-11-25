@@ -331,24 +331,17 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                 optionId = $event.target.parentElement.id;
             }
 
+            //var text = $event.target.innerText;
+            //if (text) {
+            //    $scope.keywordCondition.name = text;
+            //}
+
             if (optionId) {
                 ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1);
             }
         };
 
         $scope.keywordCondition = {name: ''};
-        $scope.searchFinalOptions = function (option) {
-
-            var keyword = '';
-            if (option && option.mingcheng) {
-                keyword == option.mingcheng;
-            } else {
-                keyword = $scope.keywordCondition;
-            }
-
-            ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, keyword);
-
-        };
 
         $scope.currentPageIndex = 1;
         $scope.searchOptionsWithKeyword = function (wantNextPage) {
@@ -405,6 +398,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         $scope.openAutoComplete = function (condition) {
             $scope.currentSelectCondition = condition;
+            $scope.h
             if (condition.id) {
 
                 $scope.openModal(condition);
@@ -480,11 +474,6 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         $scope.closeAutoCompleteDialog = function () {
             $scope.modal.hide();
-
-            $scope.currentPageIndex = 1;
-            $scope.options = [];
-
-            $scope.thereisNoMorePages = false;
         };
 
         //Cleanup the modal when we're done with it!
@@ -496,6 +485,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.$on('modal.hidden', function () {
             $scope.currentPageIndex = 1;
             $scope.options = [];
+
+            $scope.thereisNoMorePages = false;
         });
 
         // Execute action on remove modal

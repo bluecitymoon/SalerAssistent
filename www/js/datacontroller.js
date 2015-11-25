@@ -216,18 +216,6 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         };
 
         $scope.keywordCondition = {name : ''};
-        $scope.searchFinalOptions = function(option) {
-
-            var keyword = '';
-            if (option && option.mingcheng) {
-                keyword == option.mingcheng;
-            } else {
-                keyword = $scope.keywordCondition;
-            }
-
-            DataService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id,  keyword);
-
-        };
 
         $scope.currentPageIndex = 1;
         $scope.thereisNoMorePages = false;
