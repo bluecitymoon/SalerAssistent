@@ -92,9 +92,8 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         $scope.collapse = true;
 
         $scope.toggleCollapse = function(item){
-            $scope.collapse = !$scope.collapse;
 
-            console.debug(item);
+            $scope.collapse = !$scope.collapse;
 
             showSecondLevelOptionsAndLoadOptions(item);
 
@@ -202,18 +201,17 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
             return secondLevelOptions;
         };
 
-        $scope.showSecondLevelOptionsAndLoadOptions = function(option) {
+        $scope.showSecondLevelOptionsAndLoadOptions = function ($event) {
 
-            var secondLevelOptions = [];
+            var optionId = $event.target.id;
 
-            if (option.bianma) {
-                secondLevelOptions = getSecondLevelOptions(option.bianma);
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, option.id, '', 1 );
+            //THERE is a <SPAN> under <ion-item>. when user clicks on the span, what we want is actually the ion-item. so we ask for its parent element.
+            if(!optionId) {
+                optionId = $event.target.parentElement.id;
             }
 
-            if (secondLevelOptions.length > 0) {
-
-                $scope.menuOptions = secondLevelOptions;
+            if (optionId) {
+                DataService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1);
             }
         };
 

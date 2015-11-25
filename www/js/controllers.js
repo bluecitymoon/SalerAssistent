@@ -325,6 +325,12 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.showSecondLevelOptionsAndLoadOptions = function ($event) {
 
             var optionId = $event.target.id;
+
+            //THERE is a <SPAN> under <ion-item>. when user clicks on the span, what we want is actually the ion-item. so we ask for its parent element.
+            if(!optionId) {
+                optionId = $event.target.parentElement.id;
+            }
+
             if (optionId) {
                 ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1);
             }
@@ -359,11 +365,18 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                 $scope.currentPageIndex++;
             } else {
 
+                //without wantNextPage parameter means 'clicking search' button.
+                clearUpLastQueryData();
             }
 
             ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
 
         };
+
+        function clearUpLastQueryData() {
+
+            $scope.options = [];
+        }
 
         $rootScope.$on('search-option-detail-load-event', function (event, data) {
 
