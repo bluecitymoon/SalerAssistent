@@ -1,4 +1,23 @@
 /* Empty. Add your own CSS if you like */
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+    color: #4F72C9 !important;
+    opacity: 1;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+    color: #4F72C9 !important;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #4F72C9 !important;
+    text-indent: 0;
+    opacity: 1;
+}
+
 .app-icon {
     background-color: #fff;
     background: url('../img/logo.png') center;
@@ -26,6 +45,14 @@
 .letter-red-shadow {
     letter-spacing: 3px;
     text-shadow: -1px 0 red, 0 1px red, 1px 0 red, 0 -1px red;
+}
+
+.hanthink-color {
+    color: #4F72C9
+}
+
+.hanthink-bg {
+    background-color: #4F72C9;
 }
 
 .linearBg2 {
