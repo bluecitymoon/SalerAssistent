@@ -1,9 +1,16 @@
 <ion-modal-view>
-    <ion-header-bar class="bar-balanced">
-        <div class="buttons">
-            <button class="button button-clear" ng-click="closeDetailDialog()">取消</button>
-        </div>
-    </ion-header-bar>
+
+  <ion-header-bar align-title="left" class="bar-balanced">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeDetailDialog()">取消</button>
+    </div>
+    <h1 class="title"></h1>
+
+    <div class="buttons" ng-show="currentOptionsType == 'leibie'">
+      <button class="button button-clear" ng-click="toggleMenu()"><i class="ion-android-menu"></i></button>
+    </div>
+  </ion-header-bar>
+
     <ion-content>
         <ion-refresher
                 pulling-text="下拉加载下一页"
@@ -18,8 +25,11 @@
         </div>
 
         <div class="row">
-            <div class="col" ng-show="currentOptionsType == 'leibie'">
+
+            <div class="col" ng-show="currentOptionsType == 'leibie' && menuShown">
+
                 <ion-tree-list ng-click="showSecondLevelOptionsAndLoadOptions($event)" items="optionTreeObject" collapsed="collapse" template-url="{{customTemplate}}"></ion-tree-list>
+
             </div>
             <div class="col">
                 <ion-list>
@@ -31,7 +41,6 @@
             </div>
 
         </div>
-
         <div class="list" ng-if="!options || options.length == 0" style="vertical-align: middle !important;">
             <br><br><br><br><br><br>
             <div class="row">

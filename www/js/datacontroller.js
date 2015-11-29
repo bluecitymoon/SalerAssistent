@@ -2,6 +2,11 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
 
     .controller('DataCtrl', function ($scope, DataService,ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state, $ionicScrollDelegate) {
 
+
+        $scope.menuShown = true;
+        $scope.toggleMenu = function () {
+          $scope.menuShown = !$scope.menuShown;
+        };
         $scope.title = $stateParams.typename;
 
         $scope.$on('$ionicView.enter', function (e) {
@@ -387,7 +392,7 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
         });
 
         $scope.$on('modal.hidden', function(event, modal) {
-            console.log('Modal ' + modal.id + ' is hidden!');
+            $scope.menuShown = true;
         });
 
         // Cleanup the modals when we're done with them (i.e: state change)

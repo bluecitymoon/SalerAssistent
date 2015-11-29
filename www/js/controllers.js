@@ -184,6 +184,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             var typeId = $stateParams.typeid;
 
             ReportService.loadReportSearchConditions(typeId);
+
         });
 
         $scope.conditions = [];
@@ -201,6 +202,11 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
             showSecondLevelOptionsAndLoadOptions(item);
 
+        };
+
+        $scope.menuShown = true;
+        $scope.toggleMenu = function() {
+          $scope.menuShown = !$scope.menuShown;
         };
 
         $scope.customTemplate = 'item_default_renderer';
@@ -398,7 +404,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 
         $scope.openAutoComplete = function (condition) {
             $scope.currentSelectCondition = condition;
-            $scope.h
+
             if (condition.id) {
 
                 $scope.openModal(condition);
@@ -487,6 +493,8 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             $scope.options = [];
 
             $scope.thereisNoMorePages = false;
+
+            $scope.menuShown = true;
         });
 
         // Execute action on remove modal
