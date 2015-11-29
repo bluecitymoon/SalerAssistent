@@ -186,12 +186,41 @@ angular.module('starter.services', [])
                 UtilService.handleCommonServerError(response, status);
             });
         }
+
+    function loadFinalOptionResultWithCategory(conditionId, optionId, keyword, pageNumber, clientType) {
+      UtilService.showLoadingScreen();
+
+      var url = ServerRoot + 'canzhaoshuju/getshujulbfy';
+      if (clientType && clientType == 'child') {
+        url = ServerRoot + 'canzhaoshuju/getshujulbfy';
+      }
+      $http({
+        url: url,
+        data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber},
+        method: 'POST'
+      }).success(function (response, status, headers, config) {
+
+        if (response.code) {
+
+          UtilService.closeLoadingScreen();
+
+          UtilService.showAlert(response.message);
+
+        } else {
+          $rootScope.$emit('search-option-detail-load-event', {detailOptions: response});
+        }
+
+      }).error(function (response, status, headers, config) {
+        UtilService.handleCommonServerError(response, status);
+      });
+    };
         return {
             getTypes: getTypes,
             loadDataSearchConditions: loadDataSearchConditions,
             setCurrentDataType: setCurrentDataType,
             getCurrentDataType: getCurrentDataType,
             loadDataAutocompleteOptions: loadDataAutocompleteOptions,
+          loadFinalOptionResultWithCategory: loadFinalOptionResultWithCategory,
             saveData: saveData
         }
     })
@@ -250,13 +279,13 @@ angular.module('starter.services', [])
 
         //canzhaoshuju/getshuju
 
-        function loadReportAutocompleteOptions(id) {
+        function loadReportAutocompleteOptions(id, type) {
             UtilService.showLoadingScreen();
             //var copiedUserData = userData;
             //copiedUserData.cankaodangan = cankaodangan;
             $http({
                 url: ServerRoot + 'canzhaoshuju/getshuju',
-                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id},
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id, shujuleixing: type},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -277,12 +306,16 @@ angular.module('starter.services', [])
             });
         }
 
-        function loadFinalOptionResultWithCategory(conditionId, optionId, keyword, pageNumber) {
+        function loadFinalOptionResultWithCategory(conditionId, optionId, keyword, pageNumber, type) {
             UtilService.showLoadingScreen();
 
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber, shujuleixing: type};
+            console.debug(JSON.stringify(queryData));
+
+            //getshujulbfy
             $http({
-                url: ServerRoot + 'canzhaoshuju/getshujulbfy',
-                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber},
+                url: ServerRoot + 'canzhaoshuju/getleibiecx',
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: conditionId, leibieid: optionId, guanjianzi: keyword, yeshu: pageNumber, shujuleixing: type},
                 method: 'POST'
             }).success(function (response, status, headers, config) {
 
@@ -308,13 +341,13 @@ angular.module('starter.services', [])
             if (page) {
                 pageNumber = page;
             }
-            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id, guanjianzi: keyword, yeshu: pageNumber};
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, id: id, guanjianzi: keyword, yeshu: pageNumber, shujuleixing: type};
             console.debug(JSON.stringify(queryData));
 
-	        var url = 'canzhaoshuju/getshujucxfy';
-	        if ( type) {
-		        url = 'canzhaoshuju/getzhubiaoshujulbfy';
-	        }
+	        var url = 'canzhaoshuju/getmohucx';
+	        //if ( type) {
+		      //   url = 'canzhaoshuju/getzhubiaoshujulbfy';
+	        //}
 
             $http({
                 url: ServerRoot + url,

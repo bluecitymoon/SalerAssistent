@@ -114,7 +114,7 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
             }
         };
 
-        $rootScope.$on('search-data-options-load-event', function (event, data) {
+        $rootScope.$on('search-report-options-load-event', function (event, data) {
 
             if (data.options) {
                 angular.forEach(data.options, function (value, key) {
@@ -216,7 +216,7 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
             }
 
             if (optionId) {
-                DataService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1);
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1, 'mobandangan');
             }
         };
 
@@ -234,13 +234,23 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
                 return;
             }
 
-            if (wantNextPage) $scope.currentPageIndex++;
+            if (wantNextPage) {
+              $scope.currentPageIndex++;
+            }  else {
 
-            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex, $scope.sourceTypeForLikeQuery);
+              //without wantNextPage parameter means 'clicking search' button.
+              clearUpLastQueryData();
+            }
+
+            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex, 'mobandangan');
 
         };
 
-        $scope.sourceTypeForLikeQuery = 'Father';
+    function clearUpLastQueryData() {
+
+      $scope.options = [];
+    }
+        $scope.sourceTypeForLikeQuery = 'mobandangan';
 
         $rootScope.$on('search-option-detail-load-event', function(event, data) {
 
@@ -296,38 +306,37 @@ angular.module('starter.datacontrollers', ['ionic-datepicker'])
             if (condition.id) {
 
                 $scope.keywordCondition.name = '';
-                DataService.loadDataAutocompleteOptions(condition.id);
+                ReportService.loadReportAutocompleteOptions(condition.id, 'mobandangan');
 
                 $scope.modal.show();
             }
 
         };
 
-        $scope.datepickerObject = {
-            titleLabel: '选择日期',  //Optional
-            todayLabel: '今天',  //Optional
-            closeLabel: '关闭',  //Optional
-            setLabel: '设置',  //Optional
-            setButtonType : 'button-assertive',  //Optional
-            todayButtonType : 'button-calm',  //Optional
-            closeButtonType : 'button-calm',  //Optional
-            inputDate: new Date(),  //Optional
-            mondayFirst: true,  //Optional
-            //disabledDates: disabledDates, //Optional
-            weekDaysList: weekDaysList, //Optional
-            monthList: monthList, //Optional
-            templateType: 'modal', //Optional
-            showTodayButton: 'true', //Optional
-            modalHeaderColor: 'bar-positive', //Optional
-            modalFooterColor: 'bar-positive', //Optional
-            from: new Date(2000, 8, 2), //Optional
-            to: new Date(2020, 8, 25),  //Optional
-            callback: function (val) {  //Mandatory
-                datePickerCallback(val);
-            },
-            dateFormat: 'yyyy/MM/dd', //Optional
-            closeOnSelect: false //Optional
-        };
+    $scope.datepickerObject = {
+      titleLabel: '选择日期',  //Optional
+      todayLabel: '今天',  //Optional
+      closeLabel: '关闭',  //Optional
+      setLabel: '设置',  //Optional
+      setButtonType: 'button-assertive',  //Optional
+      todayButtonType: 'button-calm',  //Optional
+      closeButtonType: 'button-calm',  //Optional
+      inputDate: new Date(),  //Optional
+      mondayFirst: true,  //Optional
+      weekDaysList: weekDaysList, //Optional
+      monthList: monthList, //Optional
+      templateType: 'modal', //Optional
+      showTodayButton: 'true', //Optional
+      modalHeaderColor: 'bar-positive', //Optional
+      modalFooterColor: 'bar-positive', //Optional
+      from: new Date(2000, 8, 2), //Optional
+      to: new Date(2020, 8, 25),  //Optional
+      callback: function (val) {  //Mandatory
+        datePickerCallback(val);
+      },
+      dateFormat: 'yyyy/MM/dd', //Optional
+      closeOnSelect: true //Optional
+    };
 
         $scope.currentSelectPositionType = 'moren1';
         $scope.openDateDialog = function(condition, type) {

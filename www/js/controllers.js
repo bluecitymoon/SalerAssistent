@@ -343,7 +343,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
             //}
 
             if (optionId) {
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1);
+                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1, 'baobiaotiaojian');
             }
         };
 
@@ -368,7 +368,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
                 clearUpLastQueryData();
             }
 
-            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex);
+            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex, 'baobiaotiaojian');
 
         };
 
@@ -473,7 +473,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
         $scope.openModal = function (condition) {
 
             $scope.keywordCondition.name = '';
-            ReportService.loadReportAutocompleteOptions(condition.id);
+            ReportService.loadReportAutocompleteOptions(condition.id, 'baobiaotiaojian');
 
             $scope.modal.show();
         };

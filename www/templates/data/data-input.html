@@ -19,8 +19,13 @@
             <div class="item item-input" ng-repeat="condition in tableDeinination.zhubiaogeshi | orderBy: 'xuhao'">
                 <span class="input-label">{{condition.mingcheng}}</span>
 
-                <input type="text" ng-model="condition.morenzhi" placeholder="{{condition.mingcheng}}">
+                <input ng-show="condition.sjleixing != 'date'" type="text" ng-model="condition.morenzhi" placeholder="{{condition.mingcheng}}">
 
+                <ionic-datepicker ng-show="condition.sjleixing == 'date'" input-obj="datepickerObject">
+                  <button class="button button-clear button-positive" ng-click="openDateDialog(condition, 'moren1')">
+                    {{condition.moren1 | date:'yyyy-MM-dd'}}
+                  </button>
+                </ionic-datepicker>
                 <button class="button button-clear" ng-click="openAutoComplete(condition, 'Father')" style="margin-right: 0.8em"
                         ng-show="condition.cankaodangan"><i class="icon ion-ios-search-strong positive"></i></button>
 
