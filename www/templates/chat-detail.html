@@ -4,7 +4,8 @@
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
 -->
-<ion-view view-title="{{chatId}}">
+<ion-view
+        view-title="<h2 class='title'><i class='icon balanced ion-chatbubble user-messages-top-icon'></i> {{chatId}}</h2>">
     <ion-nav-buttons side="left">
         <div class="button button-clear" ng-click="goback()">
             返回
@@ -19,8 +20,22 @@
                 <img class="profile-pic right" ng-src="{{face}}"/>
 
                 <div class="chat-bubble right">
-                    <div class="message" ng-bind-html="message.neirong">
+                    <div class="message" ng-bind-html="message.neirong"></div>
+
+                    <br>
+
+                    <div class="row" ng-show="chatId == '审批任务'">
+                        <div class="col col-33">
+                            <button class="button button-assertive-900 button-small">拒绝</button>
+                        </div>
+
+                        <div class="col col-33"></div>
+
+                        <div class="col col-33">
+                            <button class="button button-bar-calm-900 button-small">同意</button>
+                        </div>
                     </div>
+
                 </div>
 
             </ion-item>
@@ -28,6 +43,7 @@
 
         <div class="list" ng-if="!messages || messages.length == 0" style="vertical-align: middle !important;">
             <br><br><br><br><br><br>
+
             <div class="row">
                 <div class="col col-25"></div>
                 <div class="col col-50">

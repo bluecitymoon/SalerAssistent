@@ -143,14 +143,14 @@ textarea::-webkit-input-placeholder {
 }
 
 .chat-bubble.right {
-    background-color: #158ffe;
+    background-color: #4CAF50;
     color: #fff;
     float: right;
     margin-right: 55px;
 }
 
 .chat-bubble.right:before {
-    background-color: #158ffe;
+    background-color: #4CAF50;
     right: 10px;
     -webkit-transform: rotate(118deg) skew(-5deg);
 }
