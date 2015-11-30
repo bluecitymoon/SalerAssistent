@@ -1,416 +1,430 @@
 angular.module('starter.datacontrollers', ['ionic-datepicker'])
 
-    .controller('DataCtrl', function ($scope, DataService,ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state, $ionicScrollDelegate) {
+	.controller('DataCtrl', function ($scope, DataService, ReportService, $rootScope, $stateParams, $ionicHistory, UtilService, $ionicModal, $ionicActionSheet, $state, $ionicScrollDelegate) {
 
 
-        $scope.menuShown = true;
-        $scope.toggleMenu = function () {
-          $scope.menuShown = !$scope.menuShown;
-        };
-        $scope.title = $stateParams.typename;
+		$scope.menuShown = true;
+		$scope.toggleMenu = function () {
+			$scope.menuShown = !$scope.menuShown;
+		};
+		$scope.title = $stateParams.typename;
 
-        $scope.$on('$ionicView.enter', function (e) {
+		$scope.$on('$ionicView.enter', function (e) {
 
-            var typeId = $stateParams.typeid;
+			var typeId = $stateParams.typeid;
 
-            DataService.loadDataSearchConditions(typeId);
+			DataService.loadDataSearchConditions(typeId);
 
-        });
+		});
 
-        $scope.tableDeinination = {};
-        $scope.childTableData = [];
+		$scope.tableDeinination = {};
+		$scope.childTableData = [];
 
-        $scope.saveData = function() {
+		$scope.saveData = function () {
 
-            DataService.saveData($scope.tableDeinination.zhubiaogeshi, $scope.childTableData, saveReportSuccess);
-        };
+			DataService.saveData($scope.tableDeinination.zhubiaogeshi, $scope.childTableData, saveReportSuccess);
+		};
 
-        function saveReportSuccess() {
-            UtilService.closeLoadingScreen();
+		function saveReportSuccess() {
+			UtilService.closeLoadingScreen();
 
-            UtilService.showAlert("保存成功！", function() {
-                $state.go('tab.data');
-            });
-        }
+			UtilService.showAlert("保存成功！", function () {
+				$state.go('tab.data');
+			});
+		}
 
-        var originalChildTableDefinination = [];
+		var originalChildTableDefinination = [];
 
-        $scope.toggleDetailCreationPage = function(childDataDefinination) {
+		$scope.toggleDetailCreationPage = function (childDataDefinination) {
 
-            if (childDataDefinination) {
-                $scope.tableDeinination.zibiaogeshi = childDataDefinination;
-            } else {
-                $scope.tableDeinination.zibiaogeshi = angular.copy(originalChildTableDefinination);
-            }
+			if (childDataDefinination) {
+				$scope.tableDeinination.zibiaogeshi = childDataDefinination;
+			} else {
+				$scope.tableDeinination.zibiaogeshi = angular.copy(originalChildTableDefinination);
+			}
 
-            $scope.dataDetailModal.show();
+			$scope.dataDetailModal.show();
+			$scope.userOnDetailPage = true;
 
-        };
+		};
 
-        $scope.closeDetailDialog = function(id) {
 
-            if (id == '1') {
-                $scope.dataDetailModal.hide();
-            } else {
-                $scope.modal.hide();
-            }
+		//open detail modal after the auto-complete modal is open when user is on the detail page.
+		$scope.userOnDetailPage = false;
+		$scope.closeDetailDialog = function (id) {
 
-        };
+			if (id == '1') {
+				$scope.dataDetailModal.hide();
 
-        $scope.assignSingleDetail = function() {
+				$scope.userOnDetailPage = false;
+			} else {
+				$scope.modal.hide();
 
-            $scope.childTableData.push(angular.copy($scope.tableDeinination.zibiaogeshi));
+				if ($scope.userOnDetailPage) {
+					$scope.dataDetailModal.show();
+				}
+			}
 
-            $scope.dataDetailModal.hide();
 
-            $ionicScrollDelegate.scrollBottom();
-        };
+		};
 
-        $scope.removeSingleChildData = function(child) {
+		$scope.assignSingleDetail = function () {
 
-            var index = $scope.childTableData.indexOf(child);
-            $scope.childTableData.splice(index, 1);
-        };
+			$scope.childTableData.push(angular.copy($scope.tableDeinination.zibiaogeshi));
 
-        $rootScope.$on('search-data-conditions-load-event', function (event, data) {
+			$scope.dataDetailModal.hide();
+			$scope.userOnDetailPage = false;
 
-            if (data.conditions) {
-                $scope.tableDeinination = data.conditions;
+			$ionicScrollDelegate.scrollBottom();
+		};
 
-                if ($scope.tableDeinination.zibiaogeshi) {
-                    originalChildTableDefinination = angular.copy($scope.tableDeinination.zibiaogeshi);
-                }
-            }
-            UtilService.closeLoadingScreen();
-        });
+		$scope.removeSingleChildData = function (child) {
 
-        $scope.currentOptionsType = '';
-        $scope.currentSelectCondition = {};
-        $scope.conditions = [];
-        $scope.options = [];
-        $scope.allOptions = [];
-        //$scope.detailOptions = [];
-        $scope.menuOptions = [];
+			var index = $scope.childTableData.indexOf(child);
+			$scope.childTableData.splice(index, 1);
+		};
 
-        $scope.optionTreeObject = [];
+		$rootScope.$on('search-data-conditions-load-event', function (event, data) {
 
-        $scope.collapse = true;
+			if (data.conditions) {
+				$scope.tableDeinination = data.conditions;
 
-        $scope.toggleCollapse = function(item){
+				if ($scope.tableDeinination.zibiaogeshi) {
+					originalChildTableDefinination = angular.copy($scope.tableDeinination.zibiaogeshi);
+				}
+			}
+			UtilService.closeLoadingScreen();
+		});
 
-            $scope.collapse = !$scope.collapse;
+		$scope.currentOptionsType = '';
+		$scope.currentSelectCondition = {};
+		$scope.conditions = [];
+		$scope.options = [];
+		$scope.allOptions = [];
+		//$scope.detailOptions = [];
+		$scope.menuOptions = [];
 
-            showSecondLevelOptionsAndLoadOptions(item);
+		$scope.optionTreeObject = [];
 
-        };
+		$scope.collapse = true;
 
-        $scope.customTemplate = 'item_default_renderer';
+		$scope.toggleCollapse = function (item) {
 
-        $scope.toggleTemplate = function() {
-            if ($scope.customTemplate == 'ion-item.tmpl.html') {
-                $scope.customTemplate = 'item_default_renderer'
-            } else {
-                $scope.customTemplate = 'ion-item.tmpl.html'
-            }
-        };
+			$scope.collapse = !$scope.collapse;
 
-        $rootScope.$on('search-report-options-load-event', function (event, data) {
+			showSecondLevelOptionsAndLoadOptions(item);
 
-            if (data.options) {
-                angular.forEach(data.options, function (value, key) {
+		};
 
-                    if (key == 'leibie') {
-                        $scope.allOptions = value;
+		$scope.customTemplate = 'item_default_renderer';
 
+		$scope.toggleTemplate = function () {
+			if ($scope.customTemplate == 'ion-item.tmpl.html') {
+				$scope.customTemplate = 'item_default_renderer'
+			} else {
+				$scope.customTemplate = 'ion-item.tmpl.html'
+			}
+		};
 
-                        var firstLevelOptions = [];
-                        angular.forEach(value, function (o, k) {
+		$rootScope.$on('search-report-options-load-event', function (event, data) {
 
-                            if (o.bianma && o.bianma.length == 4) {
+			if (data.options) {
+				angular.forEach(data.options, function (value, key) {
 
-                                o.name = o.mingcheng;
-                                o.checked = true;
-                                firstLevelOptions.push(o);
-                            }
-                        });
+					if (key == 'leibie') {
+						$scope.allOptions = value;
 
-                        buildTreeObjectForMenu(firstLevelOptions);
 
-                        $scope.optionTreeObject = firstLevelOptions;
+						var firstLevelOptions = [];
+						angular.forEach(value, function (o, k) {
 
-                        $scope.menuOptions = firstLevelOptions;
+							if (o.bianma && o.bianma.length == 4) {
 
+								o.name = o.mingcheng;
+								o.checked = true;
+								firstLevelOptions.push(o);
+							}
+						});
 
-                    } else {
+						buildTreeObjectForMenu(firstLevelOptions);
 
-                        if (value && value.length == 0) {
+						$scope.optionTreeObject = firstLevelOptions;
 
-                            $scope.thereisNoMorePages = true;
-                            UtilService.showAlert('没有发现数据');
+						$scope.menuOptions = firstLevelOptions;
 
-                        } else {
-                            angular.forEach(value, function (o, k) {
 
-                                $scope.options.unshift(o);
-                            });
-                        }
-                    }
+					} else {
 
-                    $scope.currentOptionsType = key;
+						if (value && value.length == 0) {
 
-                    $scope.$broadcast('scroll.refreshComplete');
+							$scope.thereisNoMorePages = true;
+							UtilService.showAlert('没有发现数据');
 
-                });
-            } else {
-                UtilService.showAlert('没有发现数据');
-            }
+						} else {
+							angular.forEach(value, function (o, k) {
 
-            UtilService.closeLoadingScreen();
-        });
+								$scope.options.unshift(o);
+							});
+						}
+					}
 
+					$scope.currentOptionsType = key;
 
-        function buildTreeObjectForMenu(options) {
+					$scope.$broadcast('scroll.refreshComplete');
 
-            angular.forEach(options, function(value, index) {
+				});
+			} else {
+				UtilService.showAlert('没有发现数据');
+			}
 
-                var nextLevelOptionArray = findNextLevelOptions(value);
+			UtilService.closeLoadingScreen();
+		});
 
-                if (nextLevelOptionArray.length > 0 ) {
-                    value.tree = nextLevelOptionArray;
-                    buildTreeObjectForMenu(nextLevelOptionArray);
-                }
-            });
-        };
 
-        function findNextLevelOptions(inputOption) {
+		function buildTreeObjectForMenu(options) {
 
-            var secondLevelOptions = [];
-            var firstLevelOptionLength = inputOption.bianma.length;
-            angular.forEach($scope.allOptions, function(option, i) {
+			angular.forEach(options, function (value, index) {
 
-                if (option.bianma) {
+				var nextLevelOptionArray = findNextLevelOptions(value);
 
-                    var secondLevelOptionLength = option.bianma.length;
-                    var gap = secondLevelOptionLength - firstLevelOptionLength;
+				if (nextLevelOptionArray.length > 0) {
+					value.tree = nextLevelOptionArray;
+					buildTreeObjectForMenu(nextLevelOptionArray);
+				}
+			});
+		};
 
-                    if(gap == 2 && option.bianma.indexOf(inputOption.bianma) > -1 ) {
+		function findNextLevelOptions(inputOption) {
 
-                        option.name = option.mingcheng;
-                        option.checked = true;
+			var secondLevelOptions = [];
+			var firstLevelOptionLength = inputOption.bianma.length;
+			angular.forEach($scope.allOptions, function (option, i) {
 
-                        secondLevelOptions.push(option);
-                    }
-                }
-            });
+				if (option.bianma) {
 
-            return secondLevelOptions;
-        };
+					var secondLevelOptionLength = option.bianma.length;
+					var gap = secondLevelOptionLength - firstLevelOptionLength;
 
-        $scope.showSecondLevelOptionsAndLoadOptions = function ($event) {
+					if (gap == 2 && option.bianma.indexOf(inputOption.bianma) > -1) {
 
-            var optionId = $event.target.id;
+						option.name = option.mingcheng;
+						option.checked = true;
 
-            //THERE is a <SPAN> under <ion-item>. when user clicks on the span, what we want is actually the ion-item. so we ask for its parent element.
-            if(!optionId) {
-                optionId = $event.target.parentElement.id;
-            }
+						secondLevelOptions.push(option);
+					}
+				}
+			});
 
-            if (optionId) {
-                ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1, 'mobandangan');
-            }
-        };
+			return secondLevelOptions;
+		};
 
-        $scope.keywordCondition = {name : ''};
+		$scope.showSecondLevelOptionsAndLoadOptions = function ($event) {
 
-        $scope.currentPageIndex = 1;
-        $scope.thereisNoMorePages = false;
-        $scope.searchOptionsWithKeyword = function (wantNextPage) {
+			var optionId = $event.target.id;
 
-            if ($scope.thereisNoMorePages) {
+			//THERE is a <SPAN> under <ion-item>. when user clicks on the span, what we want is actually the ion-item. so we ask for its parent element.
+			if (!optionId) {
+				optionId = $event.target.parentElement.id;
+			}
 
-                UtilService.showAlert('没有更多的数据了');
-                $scope.$broadcast('scroll.refreshComplete');
+			var type = $scope.userOnDetailPage? 'biaojiegou' : 'mobandangan';
+			if (optionId) {
+				ReportService.loadFinalOptionResultWithCategory($scope.currentSelectCondition.id, optionId, '', 1, type);
+			}
+		};
 
-                return;
-            }
+		$scope.keywordCondition = {name: ''};
 
-            if (wantNextPage) {
-              $scope.currentPageIndex++;
-            }  else {
+		$scope.currentPageIndex = 1;
+		$scope.thereisNoMorePages = false;
+		$scope.searchOptionsWithKeyword = function (wantNextPage) {
 
-              //without wantNextPage parameter means 'clicking search' button.
-              clearUpLastQueryData();
-            }
+			if ($scope.thereisNoMorePages) {
 
-            ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex, 'mobandangan');
+				UtilService.showAlert('没有更多的数据了');
+				$scope.$broadcast('scroll.refreshComplete');
 
-        };
+				return;
+			}
 
-    function clearUpLastQueryData() {
+			if (wantNextPage) {
+				$scope.currentPageIndex++;
+			} else {
 
-      $scope.options = [];
-    }
-        $scope.sourceTypeForLikeQuery = 'mobandangan';
+				//without wantNextPage parameter means 'clicking search' button.
+				clearUpLastQueryData();
+			}
 
-        $rootScope.$on('search-option-detail-load-event', function(event, data) {
+			var type = $scope.userOnDetailPage? 'biaojiegou' : 'mobandangan';
+			ReportService.searchOptionsWithKeyword($scope.keywordCondition.name, $scope.currentSelectCondition.id, $scope.currentPageIndex, type);
 
-            var detailOptionsList = data.detailOptions;
-            if(detailOptionsList) {
+		};
 
-                $scope.options = detailOptionsList;
-            }
+		function clearUpLastQueryData() {
 
-            UtilService.closeLoadingScreen();
+			$scope.options = [];
+		}
 
-        });
+		$scope.sourceTypeForLikeQuery = 'mobandangan';
 
-        $scope.showSecondLevelOptionsOrCloseDialog = function(option) {
+		$rootScope.$on('search-option-detail-load-event', function (event, data) {
 
-            $scope.currentSelectCondition.morenzhi = option.mingcheng;
-            $scope.modal.hide();
+			var detailOptionsList = data.detailOptions;
+			if (detailOptionsList) {
 
-        };
+				$scope.options = detailOptionsList;
+			}
 
-        function getSecondLevelOptions(firstLevelOption) {
+			UtilService.closeLoadingScreen();
 
-            var secondLevelOptions = [];
-            var firstLevelOptionLength = firstLevelOption.length;
-            angular.forEach($scope.allOptions, function(option, i) {
+		});
 
-                if (option.bianma && option.bianma.length > 4) {
+		$scope.showSecondLevelOptionsOrCloseDialog = function (option) {
 
-                    var secondLevelOptionLength = option.bianma.length;
-                    var gap = secondLevelOptionLength - firstLevelOptionLength;
+			$scope.currentSelectCondition.morenzhi = option.mingcheng;
+			$scope.modal.hide();
 
-                    if(gap == 2 && option.bianma.indexOf(firstLevelOption) > -1 ) {
-                        //{text : option.mingcheng}
-                        option.name = option.mingcheng;
+			if ($scope.userOnDetailPage) {
+				$scope.dataDetailModal.show();
+			}
 
-                        secondLevelOptions.push(option);
-                    }
-                }
-            });
+		};
 
-            return secondLevelOptions;
-        };
+		$scope.openAutoComplete = function (condition, sourceTypeForLikeQuery) {
 
+			$scope.sourceTypeForLikeQuery = sourceTypeForLikeQuery;
 
-        $scope.openAutoComplete = function (condition, sourceTypeForLikeQuery) {
+			$scope.currentSelectCondition = condition;
+			$scope.options = [];
+			$scope.optionTreeObject = {};
 
-            $scope.sourceTypeForLikeQuery = sourceTypeForLikeQuery;
+			if (condition.id) {
 
-            $scope.currentSelectCondition = condition;
-            $scope.options = [];
-            $scope.optionTreeObject = {};
+				$scope.keywordCondition.name = '';
+				ReportService.loadReportAutocompleteOptions(condition.id, 'mobandangan');
 
-            if (condition.id) {
+				$scope.modal.show();
+			}
 
-                $scope.keywordCondition.name = '';
-                ReportService.loadReportAutocompleteOptions(condition.id, 'mobandangan');
+		};
 
-                $scope.modal.show();
-            }
+		$scope.openAutoCompleteForDetail = function (condition, sourceTypeForLikeQuery) {
 
-        };
+			$scope.sourceTypeForLikeQuery = sourceTypeForLikeQuery;
 
-    $scope.datepickerObject = {
-      titleLabel: '选择日期',  //Optional
-      todayLabel: '今天',  //Optional
-      closeLabel: '关闭',  //Optional
-      setLabel: '设置',  //Optional
-      setButtonType: 'button-assertive',  //Optional
-      todayButtonType: 'button-calm',  //Optional
-      closeButtonType: 'button-calm',  //Optional
-      inputDate: new Date(),  //Optional
-      mondayFirst: true,  //Optional
-      weekDaysList: weekDaysList, //Optional
-      monthList: monthList, //Optional
-      templateType: 'modal', //Optional
-      showTodayButton: 'true', //Optional
-      modalHeaderColor: 'bar-positive', //Optional
-      modalFooterColor: 'bar-positive', //Optional
-      from: new Date(2000, 8, 2), //Optional
-      to: new Date(2020, 8, 25),  //Optional
-      callback: function (val) {  //Mandatory
-        datePickerCallback(val);
-      },
-      dateFormat: 'yyyy/MM/dd', //Optional
-      closeOnSelect: true //Optional
-    };
+			$scope.currentSelectCondition = condition;
+			$scope.options = [];
+			$scope.optionTreeObject = {};
 
-        $scope.currentSelectPositionType = 'moren1';
-        $scope.openDateDialog = function(condition, type) {
+			if (condition.id) {
 
-            $scope.currentSelectCondition = condition;
-            $scope.currentSelectPositionType = type;
-        };
+				$scope.keywordCondition.name = '';
+				ReportService.loadReportAutocompleteOptions(condition.id, 'biaojiegou');
 
-        function datePickerCallback(val) {
+				$scope.dataDetailModal.hide();
+				$scope.modal.show();
+			}
 
-            if (typeof(val) === 'undefined') {
-                console.log('Date not selected');
-            } else {
+		};
 
+		$scope.datepickerObject = {
+			titleLabel: '选择日期',  //Optional
+			todayLabel: '今天',  //Optional
+			closeLabel: '关闭',  //Optional
+			setLabel: '设置',  //Optional
+			setButtonType: 'button-assertive',  //Optional
+			todayButtonType: 'button-calm',  //Optional
+			closeButtonType: 'button-calm',  //Optional
+			inputDate: new Date(),  //Optional
+			mondayFirst: true,  //Optional
+			weekDaysList: weekDaysList, //Optional
+			monthList: monthList, //Optional
+			templateType: 'modal', //Optional
+			showTodayButton: 'true', //Optional
+			modalHeaderColor: 'bar-positive', //Optional
+			modalFooterColor: 'bar-positive', //Optional
+			from: new Date(2000, 8, 2), //Optional
+			to: new Date(2020, 8, 25),  //Optional
+			callback: function (val) {  //Mandatory
+				datePickerCallback(val);
+			},
+			dateFormat: 'yyyy/MM/dd', //Optional
+			closeOnSelect: true //Optional
+		};
 
-                if ($scope.currentSelectPositionType === 'moren2') {
-                    $scope.currentSelectCondition.moren2 = val;
-                } else {
-                    $scope.currentSelectCondition.moren1 = val;
-                }
+		$scope.currentSelectPositionType = 'moren1';
+		$scope.openDateDialog = function (condition, type) {
 
-                console.log('Selected date is : ', val);
-            }
-        }
+			$scope.currentSelectCondition = condition;
+			$scope.currentSelectPositionType = type;
+		};
 
-        $ionicModal.fromTemplateUrl('templates/modal/auto-complete-content.html', {
-            id: '2',
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            $scope.modal = modal;
-        });
+		function datePickerCallback(val) {
 
-        $scope.submitData = function() {
+			if (typeof(val) === 'undefined') {
+				console.log('Date not selected');
+			} else {
 
-            console.debug(JSON.stringify($scope.tableDeinination));
-        };
 
-        $scope.goback = function () {
-            $ionicHistory.goBack();
-        };
+				if ($scope.currentSelectPositionType === 'moren2') {
+					$scope.currentSelectCondition.moren2 = val;
+				} else {
+					$scope.currentSelectCondition.moren1 = val;
+				}
 
-        $ionicModal.fromTemplateUrl('templates/modal/data-detail-input.html', {
-            id: '1', // We need to use and ID to identify the modal that is firing the event!
-            scope: $scope,
-            backdropClickToClose: false,
-            animation: 'slide-in-up'
-        }).then(function(modal) {
-            $scope.dataDetailModal = modal;
-        });
+				console.log('Selected date is : ', val);
+			}
+		}
 
+		$ionicModal.fromTemplateUrl('templates/modal/auto-complete-content.html', {
+			id: '2',
+			scope: $scope,
+			animation: 'slide-in-up'
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
 
-        $scope.closeModal = function(index) {
-            if (index == 1) $scope.oModal1.hide();
-            else $scope.oModal2.hide();
-        };
+		$scope.submitData = function () {
 
-        /* Listen for broadcasted messages */
+			console.debug(JSON.stringify($scope.tableDeinination));
+		};
 
-        $scope.$on('modal.shown', function(event, modal) {
-            console.log('Modal ' + modal.id + ' is shown!');
-        });
+		$scope.goback = function () {
+			$ionicHistory.goBack();
+		};
 
-        $scope.$on('modal.hidden', function(event, modal) {
-            $scope.menuShown = true;
-        });
+		$ionicModal.fromTemplateUrl('templates/modal/data-detail-input.html', {
+			id: '1', // We need to use and ID to identify the modal that is firing the event!
+			scope: $scope,
+			backdropClickToClose: false,
+			animation: 'slide-in-up'
+		}).then(function (modal) {
+			$scope.dataDetailModal = modal;
+		});
 
-        // Cleanup the modals when we're done with them (i.e: state change)
-        // Angular will broadcast a $destroy event just before tearing down a scope
-        // and removing the scope from its parent.
-        $scope.$on('$destroy', function() {
-            console.log('Destroying modals...');
-            $scope.dataDetailModal.remove();
-            $scope.modal.remove();
-        });
 
-    });
+		$scope.closeModal = function (index) {
+			if (index == 1) $scope.oModal1.hide();
+			else $scope.oModal2.hide();
+		};
+
+		/* Listen for broadcasted messages */
+
+		$scope.$on('modal.shown', function (event, modal) {
+			console.log('Modal ' + modal.id + ' is shown!');
+		});
+
+		$scope.$on('modal.hidden', function (event, modal) {
+			$scope.menuShown = true;
+		});
+
+		// Cleanup the modals when we're done with them (i.e: state change)
+		// Angular will broadcast a $destroy event just before tearing down a scope
+		// and removing the scope from its parent.
+		$scope.$on('$destroy', function () {
+			console.log('Destroying modals...');
+			$scope.dataDetailModal.remove();
+			$scope.modal.remove();
+		});
+
+	});

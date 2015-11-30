@@ -518,6 +518,12 @@ angular.module('starter.services', [])
             return colors[index];
         }
 
+        function getRandomAvatar() {
+            var index = Math.floor(Math.random() * 8);
+
+            return 'img/' + index + '.jpg';
+        }
+
         return {
             showLoadingScreen: showLoadingScreen,
             closeLoadingScreen: closeLoadingScreen,
@@ -525,7 +531,8 @@ angular.module('starter.services', [])
             handleCommonServerError : handleCommonServerError,
             getIconByIndex: getIconByIndex,
             getRandomColorName: getRandomColorName,
-            getCurrentLoggedInUser: getCurrentLoggedInUser
+            getCurrentLoggedInUser: getCurrentLoggedInUser,
+            getRandomAvatar: getRandomAvatar
         }
     })
 
@@ -557,52 +564,71 @@ angular.module('starter.services', [])
         };
     })
 
-    .factory('Chats', function () {
-        // Might use a resource here that returns a JSON array
+    .factory('Chats', function (UtilService, ServerRoot, $rootScope, $http) {
 
-        // Some fake testing data
-        var chats = [{
-            id: 0,
-            name: 'Ben Sparrow',
-            lastText: 'You on your way?',
-            face: 'https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png'
-        }, {
-            id: 1,
-            name: 'Max Lynx',
-            lastText: 'Hey, it\'s me',
-            face: 'https://avatars3.githubusercontent.com/u/11214?v=3&s=460'
-        }, {
-            id: 2,
-            name: 'Adam Bradleyson',
-            lastText: 'I should buy a boat',
-            face: 'https://pbs.twimg.com/profile_images/479090794058379264/84TKj_qa.jpeg'
-        }, {
-            id: 3,
-            name: 'Perry Governor',
-            lastText: 'Look at my mukluks!',
-            face: 'https://pbs.twimg.com/profile_images/598205061232103424/3j5HUXMY.png'
-        }, {
-            id: 4,
-            name: 'Mike Harrington',
-            lastText: 'This is wicked good ice cream.',
-            face: 'https://pbs.twimg.com/profile_images/578237281384841216/R3ae1n61.png'
-        }];
+        function loadAllMyChats() {
+
+            UtilService.showLoadingScreen();
+
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token};
+            console.debug(JSON.stringify(queryData));
+
+            $http({
+                url: ServerRoot + 'xiaoxi/getxiaoxizhubiao',
+                data: {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token},
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+                    $rootScope.$emit('all-my-chats-load-event', {chats: response});
+                    console.debug(response);
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
+
+        function loadMessagesFromChat(chatId) {
+
+            UtilService.showLoadingScreen();
+
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, fasongren: chatId, yeshu: 1};
+            console.debug(JSON.stringify(queryData));
+
+            $http({
+                url: ServerRoot + 'xiaoxi/getxiaoxi',
+                data: queryData,
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+                    $rootScope.$emit('chat-list-load-event', {messages: response});
+                    console.debug(response);
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
 
         return {
-            all: function () {
-                return chats;
-            },
-            remove: function (chat) {
-                chats.splice(chats.indexOf(chat), 1);
-            },
-            get: function (chatId) {
-                for (var i = 0; i < chats.length; i++) {
-                    if (chats[i].id === parseInt(chatId)) {
-                        return chats[i];
-                    }
-                }
-                return null;
-            }
+
+            loadAllMyChats : loadAllMyChats,
+            loadMessagesFromChat : loadMessagesFromChat
+
         };
     })
 
