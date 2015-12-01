@@ -537,7 +537,7 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 		}
 	})
 
-	.controller('ChatDetailCtrl', function ($scope, $stateParams, Chats, UtilService, $rootScope, $ionicHistory) {
+	.controller('ChatDetailCtrl', function ($scope, $stateParams, Chats, UtilService, $rootScope, $ionicHistory, $ionicModal) {
 
 		$scope.chatId = $stateParams.chatId;
 
@@ -559,9 +559,83 @@ angular.module('starter.controllers', ['ionic-datepicker'])
 			UtilService.closeLoadingScreen();
 		});
 
+		$scope.singleMessageDetail = {};
+		$rootScope.$on('single-approve-message-load-event', function(event, data) {
+
+			if (data.messages) {
+				$scope.singleMessageDetail = data.messages;
+
+				console.debug($scope.singleMessageDetail);
+			}
+
+			UtilService.closeLoadingScreen();
+		});
+
+		$rootScope.$on('approve-message-proccessed-event', function(event, data) {
+
+			UtilService.closeLoadingScreen();
+
+			var message = data.result | '审批成功';
+
+			UtilService.showAlert(message, function() {
+
+			});
+
+		});
+
 		$scope.goback = function () {
 			$ionicHistory.goBack();
 		};
+
+		$ionicModal.fromTemplateUrl('templates/modal/aprove-detail.html', {
+			scope: $scope,
+			animation: 'slide-in-up'
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
+
+
+		$scope.currentMessage = {};
+		$scope.openModal = function (message) {
+
+			Chats.loadApproveMessageDetails(message);
+			$scope.modal.show();
+
+			$scope.currentMessage = message;
+		};
+
+		$scope.closeAutoCompleteDialog = function () {
+			$scope.modal.hide();
+		};
+
+		//Cleanup the modal when we're done with it!
+		$scope.$on('$destroy', function () {
+			$scope.modal.remove();
+		});
+
+		// Execute action on hide modal
+		$scope.$on('modal.hidden', function () {
+			$scope.currentPageIndex = 1;
+			$scope.options = [];
+
+			$scope.thereisNoMorePages = false;
+
+			$scope.menuShown = true;
+		});
+
+		// Execute action on remove modal
+		$scope.$on('modal.removed', function () {
+			// Execute action
+		});
+
+		$scope.comment = {
+			content: ''
+		};
+		//Xiaoxi/ shenpichuli(string username, string token, string xiaoxiid,string jiegou,string fujiaxinxi)
+		$scope.approve = function(flag) {
+
+			Chats.approve($scope.currentMessage.id, flag, $scope.comment.content);
+		}
 	})
 
 	.controller('CustomerCtrl', function ($scope, $state, CustomerService, StorageService) {

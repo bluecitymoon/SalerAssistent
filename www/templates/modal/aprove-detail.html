@@ -1,0 +1,49 @@
+<ion-modal-view>
+    <ion-header-bar align-title="left" class="bar-stable">
+        <div class="buttons">
+            <button class="button button-clear" ng-click="approve(0)"><i class="ion-close-round assertive"></i></button>
+        </div>
+        <h1 class="title"></h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="approve(1)"><i class="ion-checkmark-round balanced"></i></button>
+        </div>
+    </ion-header-bar>
+
+    <ion-content>
+
+        <div class="item item-divider">
+            审批注释
+        </div>
+
+        <input type="text" placeholder="请输入审批内容" name="inputValue" ng-model="comment.content" style="text-align: center !important; border-width: 3px !important; border-radius: 5px !important">
+
+        <div class="item item-divider" style="text-align: center">
+            审批内容
+        </div>
+        <ion-list>
+            <div ng-repeat="zhubiaoitem in singleMessageDetail.zhubiao">
+                <ion-item ng-repeat="(key, value) in zhubiaoitem">
+                    <b>{{key}}</b>
+
+                    <p>{{value}}</p>
+                </ion-item>
+
+            </div>
+        </ion-list>
+
+        <div class="item item-divider" style="text-align: center">
+            详情列表
+        </div>
+
+        <ion-list>
+            <div ng-repeat="zhubiaoitem in singleMessageDetail.zibiao">
+                <ion-item ng-repeat="(key, value) in zhubiaoitem">
+                    <b>{{key}}</b>
+
+                    <p>{{value}}</p>
+                </ion-item>
+                <hr>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

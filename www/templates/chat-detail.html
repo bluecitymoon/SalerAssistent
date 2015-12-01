@@ -19,20 +19,22 @@
 
                 <img class="profile-pic right" ng-src="{{face}}"/>
 
-                <div class="chat-bubble right">
+                <div class="chat-bubble right" ng-click="openModal(message)">
                     <div class="message" ng-bind-html="message.neirong"></div>
 
                     <br>
 
                     <div class="row" ng-show="chatId == '审批任务'">
                         <div class="col col-33">
-                            <button class="button button-assertive-900 button-small">拒绝</button>
+                            <a ng-click=""><i class="icon ion-close-round assertive"></i></a>
                         </div>
 
-                        <div class="col col-33"></div>
+                        <div class="col col-33">
+                            <a ng-click=""><i class="icon ion-checkmark-round positive"></i></a>
+                        </div>
 
                         <div class="col col-33">
-                            <button class="button button-bar-calm-900 button-small">同意</button>
+                            <a ng-click=""><i class="icon ion-information-circled royal"></i></a>
                         </div>
                     </div>
 

@@ -624,10 +624,69 @@ angular.module('starter.services', [])
             });
         }
 
+        function loadApproveMessageDetails(message) {
+
+            UtilService.showLoadingScreen();
+
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, xiaoxiid: message.id};
+            console.debug(JSON.stringify(queryData));
+
+            $http({
+                url: ServerRoot + 'xiaoxi/shenpixinxi',
+                data: queryData,
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+                    $rootScope.$emit('single-approve-message-load-event', {messages: response});
+                    console.debug(response);
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
+
+        function approve(id, flag, content) {
+
+            UtilService.showLoadingScreen();
+
+            var queryData = {username: UtilService.getCurrentLoggedInUser().username, token: UtilService.getCurrentLoggedInUser().token, xiaoxiid: id, jiegou : flag, fujiaxinxi : content};
+            console.debug(JSON.stringify(queryData));
+
+            $http({
+                url: ServerRoot + 'xiaoxi/shenpichuli',
+                data: queryData,
+                method: 'POST'
+            }).success(function (response, status, headers, config) {
+
+                if (response.code) {
+
+                    UtilService.closeLoadingScreen();
+
+                    UtilService.showAlert(response.message);
+
+                } else {
+                    $rootScope.$emit('approve-message-proccessed-event', {result: response});
+                    console.debug(response);
+                }
+
+            }).error(function (response, status, headers, config) {
+                UtilService.handleCommonServerError(response, status);
+            });
+        }
         return {
 
             loadAllMyChats : loadAllMyChats,
-            loadMessagesFromChat : loadMessagesFromChat
+            loadMessagesFromChat : loadMessagesFromChat,
+            loadApproveMessageDetails : loadApproveMessageDetails,
+            approve : approve
 
         };
     })
